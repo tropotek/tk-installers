@@ -19,7 +19,9 @@ class InitProject
 {
 
 
-
+    /**
+     * @param Event $event
+     */
     static function postInstall(Event $event)
     {
         self::init($event);
@@ -30,12 +32,17 @@ class InitProject
 
     }
 
-
+    /**
+     * @param Event $event
+     */
     static function postUpdate(Event $event)
     {
         self::init($event);
     }
 
+    /**
+     * @param Event $event
+     */
     static function init(Event $event)
     {
         $sitePath = $_SERVER['PWD'];
