@@ -12,7 +12,7 @@ use Composer\Script\Event;
 /**
  * Class InitProject
  *
- *
+ * Default initProject installer class for the framework V2
  *
  */
 class InitProject
@@ -25,10 +25,6 @@ class InitProject
     static function postInstall(Event $event)
     {
         self::init($event);
-
-
-
-
 
     }
 
@@ -46,12 +42,12 @@ class InitProject
     static function init(Event $event)
     {
         $sitePath = $_SERVER['PWD'];
-        if (!@is_file($sitePath.'/src/config/config.php')) {
+        if (!@is_file($sitePath.'/src/config/config.php') && @is_file($sitePath.'/src/config/config.php.in')) {
             echo " - Creating default `~/src/config/config.php`, edit this file to suit your server.\n";
             copy($sitePath.'/src/config/config.php.in', $sitePath.'/src/config/config.php');
         }
 
-        if (!@is_file($sitePath.'/.htaccess')) {
+        if (!@is_file($sitePath.'/.htaccess') && @is_file($sitePath.'/.htaccess.in')) {
             echo " - Creating `.htaccess` for front controller.\n";
             copy($sitePath.'/.htaccess.in', $sitePath.'/.htaccess');
             if (preg_match('/(.+)\/public_html\/(.*)/', $sitePath, $regs)) {
