@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mifsudm
- * Date: 7/20/15
- * Time: 10:15 AM
- */
 namespace Tk\Composer\Script\Event;
 
 use Composer\Script\Event;
@@ -14,6 +8,9 @@ use Composer\Script\Event;
  *
  * Default initProject installer class for the framework V2
  *
+ * @author Michael Mifsud <info@tropotek.com>
+ * @link http://www.tropotek.com/
+ * @license Copyright 2007 Michael Mifsud
  */
 class InitProject
 {
