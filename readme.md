@@ -1,39 +1,51 @@
-ttek/installers
-=========
+# Tk Installers :boom: 
 
-Authors:
+__Project:__ [ttek/tk-installers](http://packagist.org/packages/ttek/tk-installers)  
+__Published:__ 01 Nov 2015
+__Web:__ <http://www.tropotek.com/>  
+__Authors:__ Michael Mifsud <http://www.tropotek.com/>  
+__Reference:__ <https://getcomposer.org/doc/articles/custom-installers.md>  
+  
+This lib is used by composer when using the update/install command.
 
-  - Michael Mifsud <http://www.tropotek.com/>
+## Contents
 
-Requirements
-------------
-
- - PHP5.3+ (GD, CURL)
- - Apache (modrewrite)
-
-
-Installation
-------------
-
-1. Clone the repository and include this project's files into your PHP
-   project/autoloader (PSR0 compatible).
-2. Add the package "ttek/installers": "~2.0" to the composer.json file
-
-You should now be able to use the classes.
+- [Installation](#installation)
+- [Introduction](#introduction)
 
 
-Basic Usage
-------------
+## Installation
 
+Available on Packagist ([ttek/tk-installers](http://packagist.org/packages/ttek/tk-installers))
+and as such installable via [Composer](http://getcomposer.org/).
 
+```bash
+composer require ttek/tk-installers
+```
 
-  <?php
+Or add the following to your composer.json file:
 
-  // TODO: Example of using the code
+```json
+"ttek/tk-installers": "~2.0"
+```
 
+If you do not use Composer, you can grab the code from GitHub, and use any
+PSR-0 compatible autoloader (e.g. the [PHP DomTemplate](https://github.com/tropotek/tk-installers))
+to load the classes.
 
-  ?>
+## Introduction
 
+The main aim of this project is to allow for the Tk libs to build packages that install
+to other directories other than the `vendor` directory.
 
+Tk projects also contain:
+
+ - `assets` A folder to store media, css and Javascript packages if required
+ - `plugins` A folder for plugins that some sites may want to implement.
+ - `theme` A folder for your site themes
+
+The InitProject Event object is used when the composer update/install command is 
+run. This first checks for a config.php and a .htaccess and if they do not exist it then creates them from 
+the .htaccess.in and config.php.in if they are readable. It also creates a data folder and makes it writable.
 
 
