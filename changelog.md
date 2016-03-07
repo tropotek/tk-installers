@@ -1,5 +1,17 @@
 #CHANGELOG#
 
+Ver 2.0.0 [2016-03-08]:
+-------------------------------
+ - Tiding up
+ - Fixing DomTemplate documentation
+ - Update comments
+ - Updated the framework a little, tis all...
+ - Finalised V2 of the new base framework and dependant libs
+ - Another small fix
+ - Try this
+ - Thats better, ver 2 added
+
+
 Ver 1.2.0 [2014-11-17]:
 ----------------
  - Finished updates
