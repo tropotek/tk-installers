@@ -49,9 +49,9 @@ class InitProject
             copy($sitePath.'/.htaccess.in', $sitePath.'/.htaccess');
             if (preg_match('/(.+)\/public_html\/(.*)/', $sitePath, $regs)) {
                 $user = basename($regs[1]);
-                $path = '  RewriteBase /~' . $user . '/' . $regs[2] . '/';
+                $path = 'RewriteBase /~' . $user . '/' . $regs[2] . '/';
                 $buf = file_get_contents($sitePath.'/.htaccess');
-                $buf = str_replace('  RewriteBase /', $path, $buf);
+                $buf = str_replace('RewriteBase /', $path, $buf);
                 file_put_contents($sitePath.'/.htaccess', $buf);
             }
         }
