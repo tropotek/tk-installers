@@ -11,6 +11,7 @@ use Composer\Script\Event;
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2007 Michael Mifsud
+ * @deprecated To be removed soon
  */
 class InitProject
 {

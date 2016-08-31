@@ -31,6 +31,6 @@ class Asset extends LibraryInstaller
      */
     public function supports($packageType)
     {
-        return 'tek-asset' === $packageType;
+        return ('tek-asset' === $packageType) || ('ttek-asset' === $packageType);
     }
 }
