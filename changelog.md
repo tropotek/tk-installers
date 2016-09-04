@@ -1,5 +1,13 @@
 #CHANGELOG#
 
+Ver 2.0.2 [2016-09-05]:
+-------------------------------
+ - Fixed installers for plugins, assets and themes
+ - Added new tk mail lib
+ - Implemented lib into project
+ - Change php version check to gt php5.0.0
+
+
 Ver 2.0.1 [2016-07-10]:
 -------------------------------
 
