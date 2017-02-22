@@ -1,19 +1,18 @@
 <?php
-namespace Tk\Composer\Script\Event;
+namespace Tk\Composer;
 
 use Composer\Script\Event;
 
 /**
  * Class InitProject
  *
- * Default initProject installer class for the framework V2
+ * Use this Composer event when you cannot rely on the lib files
  *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2007 Michael Mifsud
- * @deprecated To be removed soon
  */
-class InitProject
+class InitProjectEvent
 {
 
 

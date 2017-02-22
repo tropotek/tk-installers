@@ -4,6 +4,13 @@ namespace Tk\Installer;
 use Composer\Package\PackageInterface;
 use Composer\Installer\LibraryInstaller;
 
+/**
+ * Class Theme
+ *
+ * @author Michael Mifsud <info@tropotek.com>
+ * @link http://www.tropotek.com/
+ * @license Copyright 2016 Michael Mifsud
+ */
 class Theme extends LibraryInstaller
 {
     /**
@@ -23,7 +30,8 @@ class Theme extends LibraryInstaller
         */
         // tropotek/jquery
         $a = explode('/', $package->getPrettyName());
-        return 'theme/'.$a[1];
+        //return 'theme/'.$a[1];
+        return 'html/'.$a[1];
     }
 
     /**

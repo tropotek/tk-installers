@@ -4,6 +4,13 @@ namespace Tk\Installer;
 use Composer\Package\PackageInterface;
 use Composer\Installer\LibraryInstaller;
 
+/**
+ * Class Asset
+ *
+ * @author Michael Mifsud <info@tropotek.com>
+ * @link http://www.tropotek.com/
+ * @license Copyright 2016 Michael Mifsud
+ */
 class Asset extends LibraryInstaller
 {
     /**
