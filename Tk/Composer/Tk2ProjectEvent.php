@@ -1,5 +1,5 @@
 <?php
-namespace Ts\Composer;
+namespace Tk\Composer;
 
 use Composer\Script\Event;
 use Tk\Config;
