@@ -1,5 +1,10 @@
 #CHANGELOG#
 
+Ver 2.0.3 [2017-02-23]:
+-------------------------------
+ - Minor Code Updates
+
+
 Ver 2.0.2 [2016-09-05]:
 -------------------------------
  - Fixed installers for plugins, assets and themes
