@@ -23,7 +23,7 @@ use Tk\Util\SqlMigrate;
  * @link http://www.tropotek.com/
  * @license Copyright 2007 Michael Mifsud
  */
-class Tk2ProjectEvent
+class SetupEvent
 {
 
     /**
