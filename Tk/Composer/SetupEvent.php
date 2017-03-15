@@ -14,11 +14,7 @@ use Tk\Util\SqlMigrate;
  * For this to work be sure not to have the composer.lock file in your gitignore
  * The composer.lock file is generated after an update and should be published 
  * with the released source files. Otherwise the 'composer install' command has issues.
- * 
- * 
- * TODO: We need to refactor this class into more logical methods so the class can be use as a base.
- * 
- * 
+ *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2007 Michael Mifsud
