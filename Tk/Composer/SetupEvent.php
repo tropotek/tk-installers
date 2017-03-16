@@ -178,9 +178,9 @@ STR;
                 // Update Database tables
                 $tables = $db->getTableList();
                 if (count($tables)) {
-                    $io->write(self::green('Upgrading Existing Database'));
+                    $io->write(self::green('Database Upgrade:'));
                 } else {
-                    $io->write(self::green('Installing New Database'));
+                    $io->write(self::green('Database Install:'));
                 }
 
                 $migrate = new SqlMigrate($db);
@@ -188,12 +188,15 @@ STR;
                 $files1 = $migrate->migrate($config->getSitePath() . '/vendor/ttek/tk-site/config/sql');
                 $files2 = $migrate->migrate($config->getSrcPath() . '/config/sql');
                 $files = array_merge($files1, $files2);
-                foreach ($files as $f) {
-                    $io->write(self::green('  .' . $f));
+                if (count($files)) {
+                    foreach ($files as $f) {
+                        $io->write(self::green('  .' . $f));
+                    }
                 }
+                $io->write(self::green('Database Migration Complete'));
 
                 if (!count($tables)) {
-                    $io->write(self::green('As this is a new DB install login into the site using User: `admin` and Password: `password` and configure your site as needed.'));
+                    $io->write(self::warning('As this is a new DB install login into the site using User: `admin` and Password: `password` and configure your site as needed.'));
                 }
             }
         } catch (\Exception $e) {
