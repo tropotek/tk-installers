@@ -160,8 +160,9 @@ STR;
             if (is_file($configFile)) {
                 // Setup DB
                 include $configFile;
+                
                 $config = Config::getInstance();
-                $db = Pdo::getInstance($config['db.name'], $config->getGroup('db'));
+                $db = Pdo::getInstance('db', $config->getGroup('db', true));
                 $config->setDb($db);
                 
                 $drop = false;
