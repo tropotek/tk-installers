@@ -154,7 +154,7 @@ STR;
             // Create data dir. TODO: Path could be created by user???
             if (!is_dir($sitePath . '/data')) {
                 $io->write(self::green('Creating data directory `./data`'));
-                mkdir($sitePath . '/data', 0777, true);
+                mkdir($sitePath . '/data', \Tk\Config::getInstance()->getDirMask(), true);
             }
 
             if (is_file($configFile)) {
