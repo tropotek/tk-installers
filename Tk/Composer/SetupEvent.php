@@ -187,7 +187,9 @@ STR;
                 $migrate = new SqlMigrate($db);
                 $migrate->setTempPath($config->getTempPath());
                 $files1 = $migrate->migrate($config->getSitePath() . '/vendor/ttek/tk-site/config/sql');
+
                 $files2 = $migrate->migrate($config->getSrcPath() . '/config/sql');
+
                 $files = array_merge($files1, $files2);
                 if (count($files)) {
                     foreach ($files as $f) {
