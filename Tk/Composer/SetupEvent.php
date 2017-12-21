@@ -158,10 +158,8 @@ STR;
             }
 
             if (is_file($configFile)) {
-                // Setup DB
+                $config = Config::create($sitePath);
                 include $configFile;
-                
-                $config = Config::getInstance();
                 $db = Pdo::getInstance('db', $config->getGroup('db', true));
                 $config->setDb($db);
                 
