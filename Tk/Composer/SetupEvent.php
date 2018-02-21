@@ -151,27 +151,33 @@ STR;
                 }
             }
 
-            // Create data dir. TODO: Path could be created by user???
-            if (!is_dir($sitePath . '/data')) {
-                $io->write(self::green('Creating data directory `./data`'));
-                mkdir($sitePath . '/data', \Tk\Config::getInstance()->getDirMask(), true);
-            }
-
+            // Do any site install setup, with new Config object
             if (is_file($configFile)) {
                 $config = Config::create($sitePath);
                 include $configFile;
+
+                // Create Data path and clear any existing Cache path
+                if (!is_dir($config->getDataPath())) {
+                    $io->write(self::green('Creating data directory: ' . $config->getDataPath()));
+                    mkdir($config->getDataPath(), $config->getDirMask(), true);
+                } else {    // Clear existing Caches
+                    if (is_dir($config->getCachePath())) {
+                        $io->write(self::green('Clearing cache: ' . $config->getCachePath()));
+                        \Tk\File::rmdir($config->getCachePath());
+                    }
+                }
+
+                // -----------------  DM Migration START  -----------------
                 $db = Pdo::getInstance('db', $config->getGroup('db', true));
                 $config->setDb($db);
                 
                 $drop = false;
                 $tables = $db->getTableList();
                 if ($isInstall) {
-                    if (count($tables)) {
+                    if (count($tables))
                         $drop = $io->askConfirmation(self::warning('Replace the existing database. WARNING: Existing data tables will be deleted! [N]: '), false);
-                    }
-                    if ($drop) {
+                    if ($drop)
                         $db->dropAllTables(true);
-                    }
                 }
 
                 // Update Database tables
@@ -185,9 +191,7 @@ STR;
                 $migrate = new SqlMigrate($db);
                 $migrate->setTempPath($config->getTempPath());
                 $files1 = $migrate->migrate($config->getSitePath() . '/vendor/ttek/tk-site/config/sql');
-
                 $files2 = $migrate->migrate($config->getSrcPath() . '/config/sql');
-
                 $files = array_merge($files1, $files2);
                 if (count($files)) {
                     foreach ($files as $f) {
@@ -195,10 +199,12 @@ STR;
                     }
                 }
                 $io->write(self::green('Database Migration Complete'));
-
                 if (!count($tables)) {
                     $io->write(self::warning('As this is a new DB install login into the site using User: `admin` and Password: `password` and configure your site as needed.'));
                 }
+                // -----------------  DM Migration END  -----------------
+                
+
             }
         } catch (\Exception $e) {
             $io->write(self::red($e->__toString()));
