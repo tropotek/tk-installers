@@ -95,11 +95,10 @@ STR;
             // Check existing config file
             $overwrite = false; // Overwrite the existing Config if it exists
             if (@is_file($configInFile)) {
-                if ($isInstall && is_file($configFile)) {
-                    $overwrite = $io->askConfirmation(self::warning('Do you want to replace the existing site configuration [N]: '), false);
-                }
                 if (!is_file($configFile)) {
                     $overwrite = true;
+                } else if ($isInstall) {
+                    $overwrite = $io->askConfirmation(self::warning('Do you want to replace the existing site configuration [N]: '), false);
                 }
             }
             
