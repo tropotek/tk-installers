@@ -18,6 +18,7 @@ use Tk\Util\SqlMigrate;
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2007 Michael Mifsud
+ * @see https://getcomposer.org/doc/articles/plugins.md
  */
 class SetupEvent
 {
@@ -220,10 +221,12 @@ STR;
         $config = array();
         // Prompt for the database access
 
-        // TODO: Just default to mysql until composer is fixed with the ask() isuue
+        // TODO: Just default to mysql until composer is fixed with the ask() issue
         // TODO: when the $io-select() is called we get the error
-        $dbTypes = array('mysql', 'pgsql', 'sqlite');
-        $dbTypes = array('mysql', 'pgsql');
+        // TODO: These DB options should come from the project config ????
+        // TODO: We should have a $config['composer.install...'] options in there
+//        $dbTypes = array('mysql', 'pgsql', 'sqlite');
+//        $dbTypes = array('mysql', 'pgsql');
         $dbTypes = array('mysql');
 
 
