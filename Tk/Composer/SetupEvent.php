@@ -109,7 +109,7 @@ STR;
             if ($overwrite) {
                 $configContents = file_get_contents($configInFile);
                 $io->write(self::green('Please answer the following questions to setup your new site configuration.'));
-                $configVars = self::userInput($io);
+                $configVars = self::userDbInput($io);
 
                 // Set dev/debug mode
                 if ($composer->getPackage()->isDev()) {
@@ -215,18 +215,23 @@ STR;
      * @param Composer\IO\IOInterface $io
      * @return array
      */
-    static function userInput($io)
+    static function userDbInput($io)
     {
         $config = array();
         // Prompt for the database access
+
         // TODO: Just default to mysql until composer is fixed with the ask() isuue
-//        $dbTypes = array('mysql', 'pgsql', 'sqlite');
+        // TODO: when the $io-select() is called we get the error
+        $dbTypes = array('mysql', 'pgsql', 'sqlite');
         $dbTypes = array('mysql', 'pgsql');
+        $dbTypes = array('mysql');
 
-        $io->write('<options=bold>');
-        $i = $io->select('Select the DB type [mysql]: ', $dbTypes, '0');
 
-        //$i = '0';
+        $i = 0;
+        if (count($dbTypes) > 1) {
+            $io->write('<options=bold>');
+            $i = $io->select('Select the DB type [mysql]: ', $dbTypes, 0);
+        }
         $io->write('</>');
         $config['db.type'] = $dbTypes[$i];
 
