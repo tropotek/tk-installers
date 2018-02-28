@@ -31,6 +31,6 @@
     },
     "require": {
         "php": ">=5.0.0",
-        "composer-plugin-api": "~1.1"
+        "composer-plugin-api": "^1.1"
     }
 }
