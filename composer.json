@@ -30,7 +30,7 @@
 
     },
     "require": {
-        "php": ">=5.0.0",
+        "php": ">=5.2.0",
         "composer-plugin-api": "^1.1"
     }
 }
