@@ -16,7 +16,7 @@ use Tk\Util\SqlMigrate;
  * with the released source files. Otherwise the 'composer install' command has issues.
  *
  * @author Michael Mifsud <info@tropotek.com>
- * @link http://www.tropotek.com/
+ * @see http://www.tropotek.com/
  * @license Copyright 2007 Michael Mifsud
  * @see https://getcomposer.org/doc/articles/plugins.md
  */
