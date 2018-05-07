@@ -2,34 +2,37 @@
     "name": "ttek/tk-installers",
     "type": "composer-plugin",
     "description": "Tropotek installer plugins",
-    "keywords": ["installers", "tools", "tropotek"],
-    "time":  "2014-01-01",
+    "keywords":  [
+        "installers",
+        "tools",
+        "tropotek"
+    ],
+    "time": "2018-05-08",
     "license": "MIT",
-    "version": "trunk",
-    "authors": [
-        {
+    "version": "2.0.8",
+    "authors":  [
+         {
             "name": "Michael Mifsud",
             "email": "info@tropotek.com.au",
             "homepage": "http://www.tropotek.com/"
         }
     ],
-    "autoload": {
-        "psr-0": {
+    "autoload":  {
+        "psr-0":  {
             "Tk\\": ""
         }
     },
-    "extra": {
-        "class": [
-          "Tk\\Installer\\AssetPlugin",
-          "Tk\\Installer\\ThemePlugin",
-          "Tk\\Installer\\PluginPlugin"
+    "extra":  {
+        "class":  [
+            "Tk\\Installer\\AssetPlugin",
+            "Tk\\Installer\\ThemePlugin",
+            "Tk\\Installer\\PluginPlugin"
         ],
-        "branch-alias": {
+        "branch-alias":  {
             "dev-master": "2.0.x-dev"
         }
-
     },
-    "require": {
+    "require":  {
         "php": ">=5.2.0",
         "composer-plugin-api": "^1.1"
     }
