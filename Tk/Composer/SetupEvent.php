@@ -155,11 +155,15 @@ STR;
             if (is_file($configFile)) {
                 $config = Config::create($sitePath);
                 include $configFile;
+                $mask = 0777;
+                if ($config && $config->getDirMask()) {
+                    $mask = $config->getDirMask();
+                }
 
                 // Create Data path and clear any existing Cache path
                 if (!is_dir($config->getDataPath())) {
                     $io->write(self::green('Creating data directory: ' . $config->getDataPath()));
-                    mkdir($config->getDataPath(), $config->getDirMask(), true);
+                    mkdir($config->getDataPath(), $mask, true);
                 } else {    // Clear existing Caches
                     if (is_dir($config->getCachePath())) {
                         $io->write(self::green('Clearing cache: ' . $config->getCachePath()));
