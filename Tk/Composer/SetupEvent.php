@@ -194,14 +194,22 @@ STR;
 
                 $migrate = new SqlMigrate($db);
                 $migrate->setTempPath($config->getTempPath());
-                $files1 = $migrate->migrate($config->getSitePath() . '/vendor/ttek/tk-site/config/sql');
-                $files2 = $migrate->migrate($config->getSrcPath() . '/config/sql');
-                $files = array_merge($files1, $files2);
-                if (count($files)) {
-                    foreach ($files as $f) {
+
+                // Migrate Site SQL Data
+                foreach ($migrate->migrate($config->getSrcPath() . '/config/sql') as $f) {
+                    $io->write(self::green('  .' . $f));
+                }
+                // Migrate Any Plugin SQL Data
+                $list = scandir($config->getPluginPath());
+                foreach ($list as $pluginPath) {
+                    if (preg_match('/^(_|\.)/', $pluginPath)) continue;
+                    $io->write(self::bold('' . $pluginPath));
+                    foreach ($migrate->migrate($config->getPluginPath().'/'.$pluginPath.'/sql') as $f) {
                         $io->write(self::green('  .' . $f));
                     }
                 }
+
+
                 $io->write(self::green('Database Migration Complete'));
                 if (!count($tables)) {
                     $io->write(self::warning('As this is a new DB install login into the site using User: `admin` and Password: `password` and configure your site as needed.'));
