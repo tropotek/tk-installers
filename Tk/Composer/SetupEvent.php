@@ -200,15 +200,16 @@ STR;
                     $io->write(self::green('  .' . $f));
                 }
                 // Migrate Any Plugin SQL Data
-                $list = scandir($config->getPluginPath());
-                foreach ($list as $pluginPath) {
-                    if (preg_match('/^(_|\.)/', $pluginPath)) continue;
-                    $io->write(self::bold('' . $pluginPath));
-                    foreach ($migrate->migrate($config->getPluginPath().'/'.$pluginPath.'/sql') as $f) {
-                        $io->write(self::green('  .' . $f));
+                if (is_dir($config->getPluginPath())) {
+                    $list = scandir($config->getPluginPath());
+                    foreach ($list as $pluginPath) {
+                        if (preg_match('/^(_|\.)/', $pluginPath)) continue;
+                        $io->write(self::bold('' . $pluginPath));
+                        foreach ($migrate->migrate($config->getPluginPath() . '/' . $pluginPath . '/sql') as $f) {
+                            $io->write(self::green('  .' . $f));
+                        }
                     }
                 }
-
 
                 $io->write(self::green('Database Migration Complete'));
                 if (!count($tables)) {
