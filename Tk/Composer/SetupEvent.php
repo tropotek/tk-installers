@@ -180,8 +180,13 @@ STR;
                 if ($isInstall) {
                     if (count($tables))
                         $drop = $io->askConfirmation(self::warning('Replace the existing database. WARNING: Existing data tables will be deleted! [N]: '), false);
-                    if ($drop)
+                    if ($drop) {
+                        $exceptions = array();
+                        if ($config->isDebug()) {
+                            $exceptions = array(\Tk\Session\Adapter\Database::$DB_TABLE);
+                        }
                         $db->dropAllTables(true);
+                    }
                 }
 
                 // Update Database tables
