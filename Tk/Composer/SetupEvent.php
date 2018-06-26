@@ -181,11 +181,11 @@ STR;
                     if (count($tables))
                         $drop = $io->askConfirmation(self::warning('Replace the existing database. WARNING: Existing data tables will be deleted! [N]: '), false);
                     if ($drop) {
-                        $exceptions = array();
+                        $exclude = array();
                         if ($config->isDebug()) {
-                            $exceptions = array(\Tk\Session\Adapter\Database::$DB_TABLE);
+                            $exclude = array(\Tk\Session\Adapter\Database::$DB_TABLE);
                         }
-                        $db->dropAllTables(true);
+                        $db->dropAllTables(true, $exclude);
                     }
                 }
 
