@@ -203,7 +203,7 @@ STR;
 
                 $paths = array(
                     'App Sql' => $config->getSrcPath() . '/config',
-                    'Lib Sql' => $config->getVendorPath() . '/ttek',
+                    'Lib Sql' => $config->getVendorPath() . '/ttek', // TODO: should this go first?
                     'Plugin Sql' => $config->getPluginPath(),
 
                 );
