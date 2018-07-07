@@ -200,18 +200,21 @@ STR;
                 $migrate = new SqlMigrate($db);
                 $migrate->setTempPath($config->getTempPath());
 
-                // Migrate Site SQL Data
-                foreach ($migrate->migrate($config->getSrcPath() . '/config/sql') as $f) {
-                    $io->write(self::green('  .' . $f));
-                }
-                // Migrate Any Plugin SQL Data
-                if (is_dir($config->getPluginPath())) {
-                    $list = scandir($config->getPluginPath());
-                    foreach ($list as $pluginPath) {
-                        if (preg_match('/^(_|\.)/', $pluginPath)) continue;
-                        $io->write(self::bold('' . $pluginPath));
-                        foreach ($migrate->migrate($config->getPluginPath() . '/' . $pluginPath . '/sql') as $f) {
-                            $io->write(self::green('  .' . $f));
+                $paths = array(
+                    'App Sql' => $config->getSrcPath() . '/config',
+                    'Lib Sql' => $config->getVendorPath() . '/ttek',
+                    'Plugin Sql' => $config->getPluginPath(),
+
+                );
+                foreach ($paths as $searchPath) {
+                    if (is_dir($searchPath)) {
+                        $list = scandir($searchPath);
+                        foreach ($list as $pluginPath) {
+                            if (preg_match('/^(_|\.)/', $pluginPath)) continue;
+                            $io->write(self::bold('' . $pluginPath));
+                            foreach ($migrate->migrate($config->getPluginPath() . '/' . $pluginPath . '/sql') as $f) {
+                                $io->write(self::green('  .' . $f));
+                            }
                         }
                     }
                 }
