@@ -197,6 +197,7 @@ STR;
                     $io->write(self::green('Database Install:'));
                 }
 
+                // Migrate new SQL files
                 $migrate = new SqlMigrate($db);
                 $migrate->setTempPath($config->getTempPath());
 
@@ -211,6 +212,8 @@ STR;
                         $list = scandir($searchPath);
                         foreach ($list as $pluginPath) {
                             if (preg_match('/^(_|\.)/', $pluginPath)) continue;
+                            $sqlPath = $config->getPluginPath() . '/' . $pluginPath . '/sql';
+                            if (!is_dir($sqlPath)) continue;
                             $io->write(self::bold('' . $pluginPath));
                             foreach ($migrate->migrate($config->getPluginPath() . '/' . $pluginPath . '/sql') as $f) {
                                 $io->write(self::green('  .' . $f));
