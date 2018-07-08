@@ -201,25 +201,35 @@ STR;
                 $migrate = new SqlMigrate($db);
                 $migrate->setTempPath($config->getTempPath());
 
-                $paths = array(
-                    'App Sql' => $config->getSrcPath() . '/config',
-                    'Lib Sql' => $config->getVendorPath() . '/ttek', // TODO: should this go first?
-                    'Plugin Sql' => $config->getPluginPath(),
-
-                );
-                foreach ($paths as $searchPath) {
-                    if (is_dir($searchPath)) {
-                        $list = scandir($searchPath);
-                        foreach ($list as $pluginPath) {
-                            if (preg_match('/^(_|\.)/', $pluginPath)) continue;
-                            $sqlPath = $config->getPluginPath() . '/' . $pluginPath . '/sql';
-                            if (!is_dir($sqlPath)) continue;
-                            $io->write(self::bold('' . $pluginPath));
-                            foreach ($migrate->migrate($config->getPluginPath() . '/' . $pluginPath . '/sql') as $f) {
-                                $io->write(self::green('  .' . $f));
-                            }
+                $sqlMigrateList = array('App Sql' => $config->getSrcPath() . '/config');
+                if ($config->get('sql.migrate.list')) {
+                    $sqlMigrateList = $config->get('sql.migrate.list');
+                }
+                foreach ($sqlMigrateList as $searchPath) {
+                    $dirItr = new \RecursiveDirectoryIterator($searchPath, \RecursiveIteratorIterator::CHILD_FIRST);
+                    $itr = new \RecursiveIteratorIterator($dirItr);
+                    $regItr = new \RegexIterator($itr, '/\/sql\/\.$/');
+                    foreach ($regItr as $d) {
+                        $io->write(self::bold('' . $d->getPath()));
+                        foreach ($migrate->migrate($d->getPath()) as $f) {
+                            $io->write(self::green('  .' . $f));
                         }
                     }
+                }
+
+//                foreach ($sqlMigrateList as $searchPath) {
+//                    if (is_dir($searchPath)) {
+//                        $list = scandir($searchPath);
+//                        foreach ($list as $migratePath) {
+//                            if (preg_match('/^(_|\.)/', $migratePath)) continue;
+//                            $sqlPath = $config->getPluginPath() . '/' . $migratePath . '/sql';
+//                            if (!is_dir($sqlPath)) continue;
+//                            $io->write(self::bold('' . $migratePath));
+//                            foreach ($migrate->migrate($sqlPath) as $f) {
+//                                $io->write(self::green('  .' . $f));
+//                            }
+//                        }
+//                    }
                 }
 
                 $io->write(self::green('Database Migration Complete'));
