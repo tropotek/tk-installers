@@ -217,21 +217,6 @@ STR;
                     }
                 }
 
-//                foreach ($sqlMigrateList as $searchPath) {
-//                    if (is_dir($searchPath)) {
-//                        $list = scandir($searchPath);
-//                        foreach ($list as $migratePath) {
-//                            if (preg_match('/^(_|\.)/', $migratePath)) continue;
-//                            $sqlPath = $config->getPluginPath() . '/' . $migratePath . '/sql';
-//                            if (!is_dir($sqlPath)) continue;
-//                            $io->write(self::bold('' . $migratePath));
-//                            foreach ($migrate->migrate($sqlPath) as $f) {
-//                                $io->write(self::green('  .' . $f));
-//                            }
-//                        }
-//                    }
-                }
-
                 $io->write(self::green('Database Migration Complete'));
                 if (!count($tables)) {
                     $io->write(self::warning('As this is a new DB install login into the site using User: `admin` and Password: `password` and configure your site as needed.'));
