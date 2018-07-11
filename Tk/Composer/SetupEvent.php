@@ -2,7 +2,6 @@
 namespace Tk\Composer;
 
 use Composer\Script\Event;
-use Tk\Config;
 use Tk\Db\Pdo;
 use Tk\Util\SqlMigrate;
 
@@ -153,8 +152,11 @@ STR;
 
             // Do any site install setup, with new Config object
             if (is_file($configFile)) {
-                $config = Config::create($sitePath);
-                include $configFile;
+                $config = \Tk\Config::create($sitePath);
+                if(class_exists('App\Config'))
+                    $config = \App\Config::create($sitePath);
+                //include $configFile;
+
                 $mask = 0777;
                 if ($config && $config->getDirMask()) {
                     $mask = $config->getDirMask();
@@ -228,7 +230,7 @@ STR;
         } catch (\Exception $e) {
             $io->write(self::red($e->__toString()));
         }
-
+        dev_voce
     }
 
     /**
