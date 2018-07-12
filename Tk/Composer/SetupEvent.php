@@ -230,7 +230,7 @@ STR;
         } catch (\Exception $e) {
             $io->write(self::red($e->__toString()));
         }
-        
+
     }
 
     /**
