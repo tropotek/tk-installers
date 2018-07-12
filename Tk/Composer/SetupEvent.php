@@ -152,10 +152,12 @@ STR;
 
             // Do any site install setup, with new Config object
             if (is_file($configFile)) {
-                $config = \Tk\Config::create($sitePath);
-                if(class_exists('App\Config'))
-                    $config = \App\Config::create($sitePath);
-                //include $configFile;
+                if(class_exists('App\Config')) {
+                    $config = \App\Config::getInstance($sitePath);
+                } else {
+                    $config = \Tk\Config::getInstance($sitePath);
+                }
+
 
                 $mask = 0777;
                 if ($config && $config->getDirMask()) {
@@ -249,7 +251,6 @@ STR;
 //        $dbTypes = array('mysql', 'pgsql', 'sqlite');
 //        $dbTypes = array('mysql', 'pgsql');
         $dbTypes = array('mysql');
-
 
         $i = 0;
         if (count($dbTypes) > 1) {
