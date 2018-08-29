@@ -215,9 +215,12 @@ STR;
                     $regItr = new \RegexIterator($itr, '/\/sql\/\.$/');
                     foreach ($regItr as $d) {
                         $io->write(self::bold('' . $d->getPath()));
-                        foreach ($migrate->migrate($d->getPath()) as $f) {
+                        $list = $migrate->migrate($d->getPath(), function ($f, $m) use ($io) {
                             $io->write(self::green('  .' . $f));
-                        }
+                        });
+//                        foreach ($list as $f) {
+//                            $io->write(self::green('  .' . $f));
+//                        }
                     }
                 }
 
