@@ -210,6 +210,7 @@ STR;
                     $sqlMigrateList = $config->get('sql.migrate.list');
                 }
                 foreach ($sqlMigrateList as $searchPath) {
+                    if (!is_dir($searchPath)) continue;
                     $dirItr = new \RecursiveDirectoryIterator($searchPath, \RecursiveIteratorIterator::CHILD_FIRST);
                     $itr = new \RecursiveIteratorIterator($dirItr);
                     $regItr = new \RegexIterator($itr, '/\/sql\/\.$/');
