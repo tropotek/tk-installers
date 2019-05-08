@@ -3,9 +3,9 @@
     "type": "composer-plugin",
     "description": "Tropotek installer plugins",
     "keywords": ["installers", "tools", "tropotek"],
-    "time":  "2014-01-01",
+    "time": "2019-04-09",
     "license": "MIT",
-    "version": "trunk",
+    "version": "3.0.0",
     "authors": [
         {
             "name": "Michael Mifsud",
@@ -18,6 +18,9 @@
             "Tk\\": ""
         }
     },
+    "require": {
+        "composer-plugin-api": "^1.1"
+    },
     "extra": {
         "class": [
           "Tk\\Installer\\AssetPlugin",
@@ -25,12 +28,8 @@
           "Tk\\Installer\\PluginPlugin"
         ],
         "branch-alias": {
-            "dev-master": "2.0.x-dev"
+            "dev-master": "3.0.x-dev"
         }
 
-    },
-    "require": {
-        "php": ">=5.2.0",
-        "composer-plugin-api": "^1.1"
     }
 }
