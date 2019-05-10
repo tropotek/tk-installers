@@ -63,7 +63,7 @@ class InitProjectEvent
             }
         }
 
-        if (!is_dir($sitePath.'/data')) {
+        if (!file_exists($sitePath.'/data')) {
             echo " - Creating site writable data directory `/data`.\n";
             mkdir($sitePath.'/data', \Tk\Config::getInstance()->getDirMask(), true);
             // TODO: Test if dir writable by apache/user running the site ????
