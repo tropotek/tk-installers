@@ -209,7 +209,6 @@ STR;
                 if ($config->get('sql.migrate.list')) {
                     $sqlMigrateList = $config->get('sql.migrate.list');
                 }
-                print_r($sqlMigrateList);
                 foreach ($sqlMigrateList as $searchPath) {
                     if (!is_dir($searchPath)) continue;
                     $dirItr = new \RecursiveDirectoryIterator($searchPath, \RecursiveIteratorIterator::CHILD_FIRST);
