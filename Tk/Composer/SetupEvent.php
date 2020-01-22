@@ -21,6 +21,8 @@ use Tk\Util\SqlMigrate;
  */
 class SetupEvent
 {
+    const MIGRATE_PREPEND = 'migrate_prepend';
+
 
     /**
      * @param Event $event
@@ -205,23 +207,39 @@ STR;
                 $migrate = new SqlMigrate($db);
                 $migrate->setTempPath($config->getTempPath());
 
-                $sqlMigrateList = array('App Sql' => $config->getSrcPath() . '/config');
+                $migrateList = array('App Sql' => $config->getSrcPath() . '/config');
                 if ($config->get('sql.migrate.list')) {
-                    $sqlMigrateList = $config->get('sql.migrate.list');
+                    $migrateList = $config->get('sql.migrate.list');
                 }
-                foreach ($sqlMigrateList as $searchPath) {
+
+                if (!empty($migrateList[self::MIGRATE_PREPEND])) {
+                    $pre = $migrateList[self::MIGRATE_PREPEND];
+                    if (!is_array($pre)) $pre = array($pre);
+                    foreach ($pre as $n => $searchPath) {
+                        if (!is_dir($searchPath)) continue;
+                        $dirItr = new \RecursiveDirectoryIterator($searchPath, \RecursiveIteratorIterator::CHILD_FIRST);
+                        $itr = new \RecursiveIteratorIterator($dirItr);
+                        $regItr = new \RegexIterator($itr, '/(\.sql|\.php)$/');
+                        foreach ($regItr as $d) {
+                            $io->write(self::bold('' . $d->getPath()));
+                            $migrate->migrate($d->getPath(), function ($f, $m) use ($io) {
+                                $io->write(self::green('  .' . $f));
+                            });
+                        }
+                    }
+                    unset($migrateList[self::MIGRATE_PREPEND]);
+                }
+
+                foreach ($migrateList as $n => $searchPath) {
                     if (!is_dir($searchPath)) continue;
                     $dirItr = new \RecursiveDirectoryIterator($searchPath, \RecursiveIteratorIterator::CHILD_FIRST);
                     $itr = new \RecursiveIteratorIterator($dirItr);
-                    $regItr = new \RegexIterator($itr, '/\/sql\/\.$/');
+                    $regItr = new \RegexIterator($itr, '/(\/sql\/\.)$/');
                     foreach ($regItr as $d) {
                         $io->write(self::bold('' . $d->getPath()));
-                        $list = $migrate->migrate($d->getPath(), function ($f, $m) use ($io) {
+                        $migrate->migrate($d->getPath(), function ($f, $m) use ($io) {
                             $io->write(self::green('  .' . $f));
                         });
-//                        foreach ($list as $f) {
-//                            $io->write(self::green('  .' . $f));
-//                        }
                     }
                 }
 
