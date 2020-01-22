@@ -248,13 +248,10 @@ STR;
                     $io->write(self::warning('As this is a new DB install login into the site using User: `admin` and Password: `password` and configure your site as needed.'));
                 }
                 // -----------------  DM Migration END  -----------------
-
-
             }
         } catch (\Exception $e) {
             $io->write(self::red($e->__toString()));
         }
-
     }
 
     /**
