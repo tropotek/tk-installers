@@ -21,8 +21,6 @@ use Tk\Util\SqlMigrate;
  */
 class SetupEvent
 {
-    const MIGRATE_PREPEND = 'migrate_prepend';
-
 
     /**
      * @param Event $event
@@ -206,42 +204,14 @@ STR;
                 // Migrate new SQL files
                 $migrate = new SqlMigrate($db);
                 $migrate->setTempPath($config->getTempPath());
-
                 $migrateList = array('App Sql' => $config->getSrcPath() . '/config');
                 if ($config->get('sql.migrate.list')) {
                     $migrateList = $config->get('sql.migrate.list');
                 }
 
-                if (!empty($migrateList[self::MIGRATE_PREPEND])) {
-                    $pre = $migrateList[self::MIGRATE_PREPEND];
-                    if (!is_array($pre)) $pre = array($pre);
-                    foreach ($pre as $n => $searchPath) {
-                        if (!is_dir($searchPath)) continue;
-                        $dirItr = new \RecursiveDirectoryIterator($searchPath, \RecursiveIteratorIterator::CHILD_FIRST);
-                        $itr = new \RecursiveIteratorIterator($dirItr);
-                        $regItr = new \RegexIterator($itr, '/(\.sql|\.php)$/');
-                        foreach ($regItr as $d) {
-                            $io->write(self::bold('' . $d->getPath()));
-                            $migrate->migrate($d->getPath(), function ($f, $m) use ($io) {
-                                $io->write(self::green('  .' . $f));
-                            });
-                        }
-                    }
-                    unset($migrateList[self::MIGRATE_PREPEND]);
-                }
-
-                foreach ($migrateList as $n => $searchPath) {
-                    if (!is_dir($searchPath)) continue;
-                    $dirItr = new \RecursiveDirectoryIterator($searchPath, \RecursiveIteratorIterator::CHILD_FIRST);
-                    $itr = new \RecursiveIteratorIterator($dirItr);
-                    $regItr = new \RegexIterator($itr, '/(\/sql\/\.)$/');
-                    foreach ($regItr as $d) {
-                        $io->write(self::bold('' . $d->getPath()));
-                        $migrate->migrate($d->getPath(), function ($f, $m) use ($io) {
-                            $io->write(self::green('  .' . $f));
-                        });
-                    }
-                }
+                $migrate->migrateList($migrateList, function (string $str, SqlMigrate $m) use ($io) {
+                    $io->write(self::green($str));
+                });
 
                 $io->write(self::green('Database Migration Complete'));
                 if (!count($tables)) {
