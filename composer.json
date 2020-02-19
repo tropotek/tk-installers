@@ -25,10 +25,6 @@
           "Tk\\Installer\\AssetPlugin",
           "Tk\\Installer\\ThemePlugin",
           "Tk\\Installer\\PluginPlugin"
-        ],
-        "branch-alias": {
-            "dev-master": "3.0.x-dev"
-        }
-
+        ]
     }
 }
