@@ -9,9 +9,9 @@ use Tk\Util\SqlMigrate;
  * Class InitProject
  *
  * Default initProject installer class for the Tk framework V2
- * 
+ *
  * For this to work be sure not to have the composer.lock file in your gitignore
- * The composer.lock file is generated after an update and should be published 
+ * The composer.lock file is generated after an update and should be published
  * with the released source files. Otherwise the 'composer install' command has issues.
  *
  * @author Michael Mifsud <info@tropotek.com>
@@ -64,7 +64,7 @@ class SetupEvent
             }
 
             $name = substr($pkg->getName(), strrpos($pkg->getName(), '/')+1);
-            $version = $pkg->getVersion();
+            $version = $pkg-> getFullPrettyVersion();
             $releaseDate = $pkg->getReleaseDate()->format('Y-m-d H:i:s');
             $year = $pkg->getReleaseDate()->format('Y');
             $desc = wordwrap($pkg->getDescription(), 45, "\n               ");
@@ -74,10 +74,11 @@ class SetupEvent
             }
             $authors = implode(', ', $authors);
 
+
             $head = <<<STR
 -----------------------------------------------------------
        $name Installer - (c) tropotek.com $year
------------------------------------------------------------ 
+-----------------------------------------------------------
   Project:     $name
   Version:     $version
   Released:    $releaseDate
@@ -101,9 +102,9 @@ STR;
                     $overwrite = $io->askConfirmation(self::warning('Do you want to replace the existing site configuration [N]: '), false);
                 }
             }
-            
+
             // TODO Add check for ability to write to config and .htaccess and data folders, throw a warning and exit if not....
-            // othrwise all the user sees is an exception when they try to view the site....Not Good. 
+            // othrwise all the user sees is an exception when they try to view the site....Not Good.
 
             // Create new config.php
             if ($overwrite) {
@@ -178,7 +179,7 @@ STR;
                 // -----------------  DM Migration START  -----------------
                 $db = Pdo::getInstance('db', $config->getGroup('db', true));
                 $config->setDb($db);
-                
+
                 $drop = false;
                 $tables = $db->getTableList();
                 if ($isInstall) {
