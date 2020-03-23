@@ -18,6 +18,7 @@ use Composer\Script\Event;
  * @note This is the basic init project version
  * @note Not really used much
  * @see SetupEvent
+ * @deprecated
  */
 class InitProjectEvent
 {
