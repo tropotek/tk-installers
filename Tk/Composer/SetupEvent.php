@@ -215,11 +215,9 @@ STR;
                 });
 
                 $io->write(self::green('Database Migration Complete'));
-                $io->write('Open the site in a browser to complete the site setup: ' . \Tk\Uri::create('/')->toString());
-//                if (!count($tables)) {
-//                    $io->write(self::warning('As this is a new DB install login into the site using User: `admin` and Password: `password` and configure your site as needed.'));
-//                }
-                // -----------------  DM Migration END  -----------------
+                if ($isInstall) {
+                    $io->write('Open the site in a browser to complete the site setup: ' . \Tk\Uri::create('/')->toString());
+                }
             }
         } catch (\Exception $e) {
             $io->write(self::red($e->__toString()));
