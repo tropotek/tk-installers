@@ -1,5 +1,13 @@
 #CHANGELOG#
 
+Ver 3.0.20 [2020-11-23]:
+-------------------------------
+  - Tagging and releasing branch `3.0` with version `3.0.16`.
+  - Tagging and releasing branch `3.0` with version `3.0.14`.
+  - Tagging and releasing branch `3.0` with version `3.0.12`.
+  - Tagging and releasing branch `M	Tk/Composer/SetupEvent.php` with version `3.0.10`.
+
+
 Ver 3.0.16 [2020-05-23]:
 -------------------------------
 
