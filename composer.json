@@ -1,5 +1,5 @@
 {
-  "name": "ttek/tk-installers",
+  "name": "uom/tk-installers",
   "type": "composer-plugin",
   "description": "Tropotek installer plugins",
   "keywords": [
@@ -12,14 +12,7 @@
   "authors": [
     {
       "name": "Michael Mifsud",
-      "email": "info@tropotek.com.au",
       "homepage": "http://www.tropotek.com/"
-    }
-  ],
-  "funding": [
-    {
-      "type": "Paypal",
-      "url": "https://www.paypal.me/tropotek"
     }
   ],
   "autoload": {
