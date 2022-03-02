@@ -39,6 +39,6 @@ class Theme extends LibraryInstaller
      */
     public function supports($packageType)
     {
-        return ('tek-theme' === $packageType) || ('ttek-theme' === $packageType);
+        return ('uom-theme' === $packageType) || ('ttek-theme' === $packageType);
     }
 }

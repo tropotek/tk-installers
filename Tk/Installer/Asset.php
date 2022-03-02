@@ -38,6 +38,6 @@ class Asset extends LibraryInstaller
      */
     public function supports($packageType)
     {
-        return ('tek-asset' === $packageType) || ('ttek-asset' === $packageType);
+        return ('uom-asset' === $packageType) || ('ttek-asset' === $packageType);
     }
 }

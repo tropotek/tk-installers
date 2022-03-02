@@ -38,6 +38,6 @@ class Plugin extends LibraryInstaller
      */
     public function supports($packageType)
     {
-        return ('tek-plugin' === $packageType) || ('ttek-plugin' === $packageType);
+        return ('uom-plugin' === $packageType) || ('ttek-plugin' === $packageType);
     }
 }
