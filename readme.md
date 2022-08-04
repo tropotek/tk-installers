@@ -1,6 +1,6 @@
 # Tk Installers :boom:
 
-__Project:__ [uom/tk-installers](http://packagist.org/packages/uom/tk-installers)
+__Project:__ [ttek/tk-installers](http://packagist.org/packages/ttek/tk-installers)
 __Web:__ <http://www.tropotek.com/>  
 __Authors:__ Michael Mifsud <http://www.tropotek.com/>  
 __Reference:__ <https://getcomposer.org/doc/articles/custom-installers.md>
@@ -15,17 +15,17 @@ This lib is used by composer when using the update/install command.
 
 ## Installation
 
-Available on Packagist ([uom/tk-installers](https://github.com/fvas-elearning/tk-installers))
+Available on Packagist ([ttek/tk-installers](https://github.com/fvas-elearning/tk-installers))
 and as such installable via [Composer](http://getcomposer.org/).
 
 ```bash
-composer require uom/tk-installers
+composer require ttek/tk-installers
 ```
 
 Or add the following to your composer.json file:
 
 ```json
-"uom/tk-installers": "~3.2"
+"ttek/tk-installers": "~3.2"
 ```
 
 If you do not use Composer, you can grab the code from GitHub, and use any
