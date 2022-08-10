@@ -8,7 +8,7 @@ use Composer\Script\Event;
  *
  * Use this Composer event when you cannot rely on the lib files
  *
- * @author Michael Mifsud <info@tropotek.com>
+ * @author Michael Mifsud <http://www.tropotek.com/>
  * @see http://www.tropotek.com/
  * @license Copyright 2007 Michael Mifsud
  *

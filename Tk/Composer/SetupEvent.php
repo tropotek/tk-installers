@@ -14,7 +14,7 @@ use Tk\Util\SqlMigrate;
  * The composer.lock file is generated after an update and should be published
  * with the released source files. Otherwise the 'composer install' command has issues.
  *
- * @author Michael Mifsud <info@tropotek.com>
+ * @author Michael Mifsud <http://www.tropotek.com/>
  * @see http://www.tropotek.com/
  * @license Copyright 2007 Michael Mifsud
  * @see https://getcomposer.org/doc/articles/plugins.md
