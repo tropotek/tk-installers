@@ -13,29 +13,17 @@ use Composer\Installer\LibraryInstaller;
  */
 class Plugin extends LibraryInstaller
 {
-    /**
-     * {@inheritDoc}
-     */
     public function getInstallPath(PackageInterface $package)
     {
-        /*
-        $prefix = substr($package->getPrettyName(), 0, 23);
-        if ('phpdocumentor/template-' !== $prefix) {
+        $a = explode('/', $package->getPrettyName());
+        if (count($a) != 2) {
             throw new \InvalidArgumentException(
-                'Unable to install template, phpdocumentor templates '
-                .'should always start their package name with '
-                .'"phpdocumentor/template-"'
+                'Unable to install plugin package should be in the format ttek-plg/<name>'
             );
         }
-        */
-        // tropotek/jquery
-        $a = explode('/', $package->getPrettyName());
         return 'plugin/'.$a[1];
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function supports($packageType)
     {
         return ('uom-plugin' === $packageType) || ('ttek-plugin' === $packageType);

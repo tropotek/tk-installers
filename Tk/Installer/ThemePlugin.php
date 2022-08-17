@@ -5,13 +5,6 @@ use Composer\Composer;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 
-/**
- * Class ThemePlugin
- *
- * @author Michael Mifsud <http://www.tropotek.com/>
- * @see http://www.tropotek.com/
- * @license Copyright 2016 Michael Mifsud
- */
 class ThemePlugin implements PluginInterface
 {
     public function activate(Composer $composer, IOInterface $io)
