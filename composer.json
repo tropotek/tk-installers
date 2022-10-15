@@ -1,13 +1,12 @@
 {
   "name": "ttek/tk-installers",
   "type": "composer-plugin",
-  "description": "Tropotek installer plugins",
+  "description": "Tropotek composer installer plugin",
   "keywords": [
     "installers",
-    "tools",
     "tropotek"
   ],
-  "time": "2019-04-09",
+  "time": "2022-10-15",
   "license": "MIT",
   "authors": [
     {
