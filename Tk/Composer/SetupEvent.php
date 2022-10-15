@@ -3,20 +3,17 @@ namespace Tk\Composer;
 
 use Composer\Script\Event;
 use Tk\Db\Pdo;
-use Tk\Util\SqlMigrate;
+use Tk\Db\Util\SqlMigrate;
+use Tk\Traits\SystemTrait;
 
 /**
- * Class InitProject
- *
  * Default initProject installer class for the Tk framework V2
  *
  * For this to work be sure not to have the composer.lock file in your gitignore
  * The composer.lock file is generated after an update and should be published
  * with the released source files. Otherwise the 'composer install' command has issues.
  *
- * @author Michael Mifsud <http://www.tropotek.com/>
- * @see http://www.tropotek.com/
- * @license Copyright 2007 Michael Mifsud
+ * @author Tropotek <http://www.tropotek.com/>
  * @see https://getcomposer.org/doc/articles/plugins.md
  */
 class SetupEvent
@@ -38,16 +35,7 @@ class SetupEvent
         self::init($event, false);
     }
 
-    static function vd($obj)
-    {
-        echo print_r($obj, true) . "\n";
-    }
-
-    /**
-     * @param Event $event
-     * @param bool $isInstall
-     */
-    static function init(Event $event, $isInstall = false)
+    static function init(Event $event, bool $isInstall = false)
     {
         try {
             $sitePath = $_SERVER['PWD'];
@@ -154,17 +142,13 @@ STR;
             // Do any site install setup, with new Config object
             if (is_file($configFile)) {
                 if(class_exists('App\Config')) {
-                    $config = \App\Config::getInstance($sitePath);
+                    $config = \App\Config::instance();
                 } else {
-                    $config = \Tk\Config::getInstance($sitePath);
+                    $config = \Tk\Config::instance();
                 }
 
 
                 $mask = 0777;
-                if ($config && $config->getDirMask()) {
-                    $mask = $config->getDirMask();
-                }
-
                 // Create Data path and clear any existing Cache path
                 if (!is_dir($config->getDataPath())) {
                     $io->write(self::green('Creating data directory: ' . $config->getDataPath()));
@@ -172,13 +156,12 @@ STR;
                 } else {    // Clear existing Caches
                     if (is_dir($config->getCachePath())) {
                         $io->write(self::green('Clearing cache: ' . $config->getCachePath()));
-                        \Tk\File::rmdir($config->getCachePath());
+                        \Tk\FileUtil::rmdir($config->getCachePath());
                     }
                 }
 
                 // -----------------  DM Migration START  -----------------
-                $db = Pdo::getInstance('db', $config->getGroup('db', true));
-                $config->setDb($db);
+                $db = Pdo::instance('db', $config->getGroup('db', true));
 
                 $drop = false;
                 $tables = $db->getTableList();
@@ -186,9 +169,9 @@ STR;
                     if (count($tables))
                         $drop = $io->askConfirmation(self::warning('Replace the existing database. WARNING: Existing data tables will be deleted! [N]: '), false);
                     if ($drop) {
-                        $exclude = array();
+                        $exclude = [];
                         if ($config->isDebug()) {
-                            $exclude = array(\Tk\Session\Adapter\Database::$DB_TABLE);
+                            $exclude = [$config->get('session.db_table')];
                         }
                         $db->dropAllTables(true, $exclude);
                     }
@@ -205,11 +188,12 @@ STR;
                 // Migrate new SQL files
                 $migrate = new SqlMigrate($db);
                 $migrate->setTempPath($config->getTempPath());
-                $migrateList = array('App Sql' => $config->getSrcPath() . '/config');
+                $migrateList = ['App Sql' => $config->getBasePath() . '/config'];
                 if ($config->get('sql.migrate.list')) {
                     $migrateList = $config->get('sql.migrate.list');
                 }
-
+                // TODO: find a better solution than passing paths from the config.
+                // we should refactor the migration process
                 $migrate->migrateList($migrateList, function (string $str, SqlMigrate $m) use ($io) {
                     $io->write(self::green($str));
                 });
@@ -228,15 +212,10 @@ STR;
      * @param Composer\IO\IOInterface $io
      * @return array
      */
-    static function userDbInput($io)
+    static function userDbInput($io): array
     {
         $config = array();
         // Prompt for the database access
-
-        // TODO: Just default to mysql until composer is fixed with the ask() issue
-        // TODO: when the $io-select() is called we get the error
-        // TODO: These DB options should come from the project config ????
-        // TODO: We should have a $config['composer.install...'] options in there
 //        $dbTypes = array('mysql', 'pgsql', 'sqlite');
 //        $dbTypes = array('mysql', 'pgsql');
         $dbTypes = array('mysql');
@@ -257,16 +236,12 @@ STR;
         return $config;
     }
 
-
     /**
      * updateConfig
      *
-     * @param string $k
-     * @param string $v
-     * @param string $configContents
-     * @return mixed
+     * @return array|string|string[]|null
      */
-    static function setConfigValue($k, $v, $configContents)
+    static function setConfigValue(string $k, string $v, string $configContents)
     {
         // filter out non quotable values
         if (is_string($v) && !preg_match('/^(true|false|null|new|array|function|\[|\\\\)/', $v)) {
@@ -291,4 +266,8 @@ STR;
 //$output->writeln('<fg=black;bg=cyan>foo</>');
 //$output->writeln('<bg=yellow;options=bold>foo</>');
 
+    static function vd($obj)
+    {
+        echo print_r($obj, true) . "\n";
+    }
 }
