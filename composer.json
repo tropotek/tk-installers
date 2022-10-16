@@ -19,14 +19,13 @@
       "Tk\\": ""
     }
   },
-
   "require": {
+    "php": "^7.3||^8.0",
     "composer-plugin-api": "^2.0"
   },
   "require-dev": {
     "composer/composer": "^2.0"
   },
-
   "extra": {
     "class": [
       "Tk\\Installer\\AssetPlugin",
