@@ -27,14 +27,14 @@
     "composer/composer": "^2.0"
   },
   "extra": {
+    "plugin-modifies-install-path": true,
     "class": [
       "Tk\\Installer\\AssetPlugin",
       "Tk\\Installer\\ThemePlugin",
       "Tk\\Installer\\PluginPlugin"
     ],
-    "plugin-modifies-install-path": true,
     "branch-alias": {
-      "dev-master": "4.0.x-dev"
+      "dev-master": "7.0.x-dev"
     }
   }
 }
