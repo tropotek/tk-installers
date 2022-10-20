@@ -42,9 +42,6 @@ class Installer
             $composer = $event->getComposer();
             $pkg = $composer->getPackage();
 
-            $io->write('Testing.........');
-            vd($composer->getPluginManager()->getPlugins());
-
             // Get the PHP user that will be executing the scripts
             if (function_exists('posix_getpwuid')) {
                 $a = posix_getpwuid(fileowner(__FILE__));
