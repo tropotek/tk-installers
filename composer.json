@@ -29,9 +29,8 @@
   "extra": {
     "plugin-modifies-install-path": true,
     "class": [
-      "Tk\\Composer\\AssetPlugin",
-      "Tk\\Composer\\ThemePlugin",
-      "Tk\\Composer\\PluginPlugin"
+      "Tk\\Composer\\PluginPlugin",
+      "Tk\\Composer\\ThemePlugin"
     ],
     "branch-alias": {
       "dev-master": "8.0.x-dev"

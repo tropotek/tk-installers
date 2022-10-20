@@ -1,6 +1,7 @@
 <?php
 namespace Tk\Composer;
 
+use Composer\IO\IOInterface;
 use Composer\Script\Event;
 use Tk\Db\Pdo;
 use Tk\Db\Util\SqlMigrate;
@@ -21,7 +22,7 @@ class Installer
     /**
      * @param Event $event
      */
-    static function postInstall(Event $event)
+    static function postInstall(Event $event): void
     {
         self::init($event, true);
     }
@@ -29,18 +30,26 @@ class Installer
     /**
      * @param Event $event
      */
-    static function postUpdate(Event $event)
+    static function postUpdate(Event $event): void
     {
         self::init($event, false);
     }
 
-    static function init(Event $event, bool $isInstall = false)
+    static function init(Event $event, bool $isInstall = false): void
     {
         try {
             $sitePath = $_SERVER['PWD'];
             $io = $event->getIO();
             $composer = $event->getComposer();
             $pkg = $composer->getPackage();
+
+            $pkgPaths = ['/vendor/ttek', '/plugin', '/http/theme'];
+            // TODO: search these paths for packages and load files => [config.php, routes.php, ...]
+            //       Or maybe we need to load an object that can init a lib as needed (simple type of bundle???)
+            //         eg: \Tk\Framework. \Dom\Domtemplate
+
+            self::vd($composer->getPackage()->getName());
+            self::vd($composer->getPackage()->getRepositories());
 
             // Get the PHP user that will be executing the scripts
             if (function_exists('posix_getpwuid')) {
@@ -55,7 +64,7 @@ class Installer
             $releaseDate = $pkg->getReleaseDate()->format('Y-m-d H:i:s');
             $year = $pkg->getReleaseDate()->format('Y');
             $desc = wordwrap($pkg->getDescription(), 45, "\n               ");
-            $authors = array();
+            $authors = [];
             foreach ($pkg->getAuthors() as $auth) {
                 $authors[] = $auth['name'];
             }
@@ -89,9 +98,6 @@ STR;
                     $overwrite = $io->askConfirmation(self::warning('Do you want to replace the existing site configuration [N]: '), false);
                 }
             }
-
-            // TODO Add check for ability to write to config and .htaccess and data folders, throw a warning and exit if not....
-            // othrwise all the user sees is an exception when they try to view the site....Not Good.
 
             // Create new config.php
             if ($overwrite) {
@@ -139,13 +145,9 @@ STR;
             }
 
             // Do any site install setup, with new Config object
-            if (is_file($configFile)) {
-                if(class_exists('App\Config')) {
-                    $config = \App\Config::instance();
-                } else {
-                    $config = \Tk\Config::instance();
-                }
-
+            if (is_file($configFile) && is_file($sitePath.'/_prepend.php')) {
+                include $sitePath.'/_prepend.php';
+                $config = \Tk\Config::instance();
 
                 $mask = 0777;
                 // Create Data path and clear any existing Cache path
@@ -160,7 +162,7 @@ STR;
                 }
 
                 // -----------------  DM Migration START  -----------------
-                $db = Pdo::instance('db', $config->getGroup('db', true));
+                $db = Pdo::instance('default', $config->getGroup('db.default', true));
 
                 $drop = false;
                 $tables = $db->getTableList();
@@ -187,15 +189,18 @@ STR;
                 // Migrate new SQL files
                 $migrate = new SqlMigrate($db);
                 $migrate->setTempPath($config->getTempPath());
+
+
+                // TODO: find a better solution than passing paths from the config.
                 $migrateList = ['App Sql' => $config->getBasePath() . '/config'];
                 if ($config->get('sql.migrate.list')) {
                     $migrateList = $config->get('sql.migrate.list');
                 }
-                // TODO: find a better solution than passing paths from the config.
                 // we should refactor the migration process
                 $migrate->migrateList($migrateList, function (string $str, SqlMigrate $m) use ($io) {
                     $io->write(self::green($str));
                 });
+
 
                 $io->write(self::green('Database Migration Complete'));
                 if ($isInstall) {
@@ -208,16 +213,15 @@ STR;
     }
 
     /**
-     * @param Composer\IO\IOInterface $io
-     * @return array
+     * @throws \Exception
      */
-    static function userDbInput($io): array
+    static function userDbInput(IOInterface $io): array
     {
-        $config = array();
+        $config = [];
         // Prompt for the database access
-//        $dbTypes = array('mysql', 'pgsql', 'sqlite');
-//        $dbTypes = array('mysql', 'pgsql');
-        $dbTypes = array('mysql');
+//        $dbTypes = ['mysql', 'pgsql', 'sqlite'];
+//        $dbTypes = ['mysql', 'pgsql'];
+        $dbTypes = ['mysql'];
 
         $i = 0;
         if (count($dbTypes) > 1) {
@@ -225,25 +229,19 @@ STR;
             $i = $io->select('Select the DB type [mysql]: ', $dbTypes, 0);
         }
         $io->write('</>');
-        $config['db.type'] = $dbTypes[$i];
-
-        $config['db.host'] = $io->ask(self::bold('Set the DB hostname [localhost]: '), 'localhost');
-        $config['db.name'] = $io->askAndValidate(self::bold('Set the DB name: '), function ($data) { if (!$data) throw new \Exception('Please enter the DB name to use.');  return $data; });
-        $config['db.user'] = $io->askAndValidate(self::bold('Set the DB user: '), function ($data) { if (!$data) throw new \Exception('Please enter the DB username.'); return $data; });
-        $config['db.pass'] = $io->askAndValidate(self::bold('Set the DB password: '), function ($data) { if (!$data) throw new \Exception('Please enter the DB password.'); return $data; });
+        $config['db.default.type'] = $dbTypes[$i];
+        $config['db.default.host'] = $io->ask(self::bold('Set the DB hostname [localhost]: '), 'localhost');
+        $config['db.default.name'] = $io->askAndValidate(self::bold('Set the DB name: '), function ($data) { if (!$data) throw new \Exception('Please enter the DB name to use.');  return $data; });
+        $config['db.default.user'] = $io->askAndValidate(self::bold('Set the DB user: '), function ($data) { if (!$data) throw new \Exception('Please enter the DB username.'); return $data; });
+        $config['db.default.pass'] = $io->askAndValidate(self::bold('Set the DB password: '), function ($data) { if (!$data) throw new \Exception('Please enter the DB password.'); return $data; });
 
         return $config;
     }
 
-    /**
-     * updateConfig
-     *
-     * @return array|string|string[]|null
-     */
-    static function setConfigValue(string $k, string $v, string $configContents)
+    static function setConfigValue(string $k, string $v, string $configContents): array|string|null
     {
         // filter out non quotable values
-        if (is_string($v) && !preg_match('/^(true|false|null|new|array|function|\[|\\\\)/', $v)) {
+        if (!preg_match('/^(true|false|null|new|array|function|\[|\\\\)/', $v)) {
             $v = self::quote($v);
         }
         $reg = '/\$config\[[\'"]('.preg_quote($k, '/').')[\'"]\]\s=\s[\'"]?(.+)[\'"]?;/';

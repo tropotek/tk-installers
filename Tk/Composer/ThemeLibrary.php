@@ -14,7 +14,7 @@ class ThemeLibrary extends LibraryInstaller
                 'Unable to install plugin package should be in the format ttek-theme/<name>'
             );
         }
-        return 'html/'.$a[1];
+        return 'html/theme/'.$a[1];
     }
 
     public function supports($packageType)
