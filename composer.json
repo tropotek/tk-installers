@@ -26,14 +26,6 @@
   "require-dev": {
     "composer/composer": "^2.0"
   },
-  "scripts": {
-    "post-install-cmd": [
-      "Tk\\Composer\\Installer::postInstall"
-    ],
-    "post-update-cmd": [
-      "Tk\\Composer\\Installer::postUpdate"
-    ]
-  },
   "extra": {
     "plugin-modifies-install-path": true,
     "class": [
