@@ -1,5 +1,5 @@
 <?php
-namespace Tk\Installer;
+namespace Tk\Composer;
 
 use Composer\Composer;
 use Composer\IO\IOInterface;
@@ -9,7 +9,7 @@ class PluginPlugin implements PluginInterface
 {
     public function activate(Composer $composer, IOInterface $io)
     {
-        $installer = new Plugin($io, $composer);
+        $installer = new PluginLibrary($io, $composer);
         $composer->getInstallationManager()->addInstaller($installer);
     }
 

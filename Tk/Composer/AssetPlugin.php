@@ -1,15 +1,15 @@
 <?php
-namespace Tk\Installer;
+namespace Tk\Composer;
 
 use Composer\Composer;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 
-class ThemePlugin implements PluginInterface
+class AssetPlugin implements PluginInterface
 {
     public function activate(Composer $composer, IOInterface $io)
     {
-        $installer = new Theme($io, $composer);
+        $installer = new AssetLibrary($io, $composer);
         $composer->getInstallationManager()->addInstaller($installer);
     }
 

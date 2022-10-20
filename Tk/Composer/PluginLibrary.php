@@ -1,24 +1,24 @@
 <?php
-namespace Tk\Installer;
+namespace Tk\Composer;
 
 use Composer\Package\PackageInterface;
 use Composer\Installer\LibraryInstaller;
 
-class Theme extends LibraryInstaller
+class PluginLibrary extends LibraryInstaller
 {
     public function getInstallPath(PackageInterface $package)
     {
         $a = explode('/', $package->getPrettyName());
         if (count($a) != 2) {
             throw new \InvalidArgumentException(
-                'Unable to install plugin package should be in the format ttek-theme/<name>'
+                'Unable to install plugin package should be in the format ttek-plg/<name>'
             );
         }
-        return 'html/'.$a[1];
+        return 'plugin/'.$a[1];
     }
 
     public function supports($packageType)
     {
-        return ('uom-theme' === $packageType) || ('ttek-theme' === $packageType);
+        return ('uom-plugin' === $packageType) || ('ttek-plugin' === $packageType);
     }
 }

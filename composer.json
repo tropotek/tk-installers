@@ -26,12 +26,20 @@
   "require-dev": {
     "composer/composer": "^2.0"
   },
+  "scripts": {
+    "post-install-cmd": [
+      "Tk\\Composer\\SetupEvent::postInstall"
+    ],
+    "post-update-cmd": [
+      "Tk\\Composer\\SetupEvent::postUpdate"
+    ]
+  },
   "extra": {
     "plugin-modifies-install-path": true,
     "class": [
-      "Tk\\Installer\\AssetPlugin",
-      "Tk\\Installer\\ThemePlugin",
-      "Tk\\Installer\\PluginPlugin"
+      "Tk\\Composer\\AssetPlugin",
+      "Tk\\Composer\\ThemePlugin",
+      "Tk\\Composer\\PluginPlugin"
     ],
     "branch-alias": {
       "dev-master": "8.0.x-dev"

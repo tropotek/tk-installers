@@ -4,19 +4,18 @@ namespace Tk\Composer;
 use Composer\Script\Event;
 use Tk\Db\Pdo;
 use Tk\Db\Util\SqlMigrate;
-use Tk\Traits\SystemTrait;
 
 /**
  * Default initProject installer class for the Tk framework V2
  *
  * For this to work be sure not to have the composer.lock file in your gitignore
  * The composer.lock file is generated after an update and should be published
- * with the released source files. Otherwise the 'composer install' command has issues.
+ * with the released source files. Otherwise, the 'composer install' command has issues.
  *
  * @author Tropotek <http://www.tropotek.com/>
  * @see https://getcomposer.org/doc/articles/plugins.md
  */
-class SetupEvent
+class Installer
 {
 
     /**
@@ -68,7 +67,7 @@ class SetupEvent
 
             $head = <<<STR
 -----------------------------------------------------------
-       $name Installer - (c) tropotek.com $year
+       $name Plugin - (c) tropotek.com $year
 -----------------------------------------------------------
   Project:     $name
   Version:     $version
