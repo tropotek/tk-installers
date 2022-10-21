@@ -48,8 +48,6 @@ class Installer
             //       Or maybe we need to load an object that can init a lib as needed (simple type of bundle???)
             //         eg: \Tk\Framework. \Dom\Domtemplate
 
-            self::vd($composer->getPackage()->getName());
-            self::vd($composer->getPackage()->getRepositories());
 
             // Get the PHP user that will be executing the scripts
             if (function_exists('posix_getpwuid')) {

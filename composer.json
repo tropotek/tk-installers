@@ -34,6 +34,7 @@
     ],
     "branch-alias": {
       "dev-master": "8.0.x-dev"
-    }
+    },
+    "version": "8.0.0"
   }
 }
