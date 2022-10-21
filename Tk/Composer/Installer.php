@@ -5,37 +5,50 @@ use Composer\IO\IOInterface;
 use Composer\Script\Event;
 use Tk\Db\Pdo;
 use Tk\Db\Util\SqlMigrate;
+use Tk\Traits\SingletonTrait;
 
 /**
- * Default initProject installer class for the Tk framework V2
+ * Default initProject installer class for the Tk framework
  *
  * For this to work be sure not to have the composer.lock file in your gitignore
  * The composer.lock file is generated after an update and should be published
  * with the released source files. Otherwise, the 'composer install' command has issues.
  *
+ * Add the following to your top-level composer.json:
+ * "scripts": {
+ *   "post-install-cmd": [
+ *     "Tk\\Composer\\Installer::postInstall"
+ *   ],
+ *   "post-update-cmd": [
+ *     "Tk\\Composer\\Installer::postUpdate"
+ *   ]
+ * }
+ *
  * @author Tropotek <http://www.tropotek.com/>
- * @see https://getcomposer.org/doc/articles/plugins.md
  */
 class Installer
 {
+    use SingletonTrait;
 
     /**
+     * Add this events to your top-level composer.json
      * @param Event $event
      */
     static function postInstall(Event $event): void
     {
-        self::init($event, true);
+        self::instance()->init($event, true);
     }
 
     /**
+     * Add this events to your top-level composer.json
      * @param Event $event
      */
     static function postUpdate(Event $event): void
     {
-        self::init($event, false);
+        self::instance()->init($event, false);
     }
 
-    static function init(Event $event, bool $isInstall = false): void
+    protected function init(Event $event, bool $isInstall = false): void
     {
         try {
             $sitePath = $_SERVER['PWD'];
@@ -80,7 +93,7 @@ class Installer
   Description: $desc
 -----------------------------------------------------------
 STR;
-            $io->write(self::bold($head));
+            $io->write($this->bold($head));
             $configInFile = $sitePath . '/src/config/config.php.in';
             $configFile = $sitePath . '/src/config/config.php';
             $htInFile = $sitePath . '/.htaccess.in';
@@ -93,15 +106,15 @@ STR;
                 if (!is_file($configFile)) {
                     $overwrite = true;
                 } else if ($isInstall) {
-                    $overwrite = $io->askConfirmation(self::warning('Do you want to replace the existing site configuration [N]: '), false);
+                    $overwrite = $io->askConfirmation($this->warning('Do you want to replace the existing site configuration [N]: '), false);
                 }
             }
 
             // Create new config.php
             if ($overwrite) {
                 $configContents = file_get_contents($configInFile);
-                $io->write(self::green('Please answer the following questions to setup your new site configuration.'));
-                $configVars = self::userDbInput($io);
+                $io->write($this->green('Please answer the following questions to setup your new site configuration.'));
+                $configVars = $this->userDbInput($io);
 
                 // Set dev/debug mode
                 if ($composer->getPackage()->isDev()) {
@@ -116,26 +129,26 @@ STR;
 
                 // update the config contents string
                 foreach ($configVars as $k => $v) {
-                    $configContents = self::setConfigValue($k, $v, $configContents);
+                    $configContents = $this->setConfigValue($k, $v, $configContents);
                 }
 
-                $io->write(self::green('Saving config.php'));
+                $io->write($this->green('Saving config.php'));
                 file_put_contents($configFile, $configContents);
             }
 
             // Create .htaccess
             if (@is_file($htInFile)) {
                 if ($overwrite || !@is_file($htFile)) {
-                    $io->write(self::green('Creating .htaccess file'));
+                    $io->write($this->green('Creating .htaccess file'));
                     copy($htInFile, $htFile);
                     $path = '/';
                     if (preg_match('/(.+)\/public_html\/(.*)/', $sitePath, $regs)) {
                         $user = basename($regs[1]);
                         $path = '/~' . $user . '/' . $regs[2] . '/';
                     }
-                    $path = trim($io->ask(self::bold('What is the base URL path [' . $path . ']: '), $path));
+                    $path = trim($io->ask($this->bold('What is the base URL path [' . $path . ']: '), $path));
                     if (!$path) $path = '/';
-                    $io->write(self::green('Saving .htaccess file'));
+                    $io->write($this->green('Saving .htaccess file'));
                     $buf = file_get_contents($htFile);
                     $buf = str_replace('RewriteBase /', 'RewriteBase ' . $path, $buf);
                     file_put_contents($htFile, $buf);
@@ -144,17 +157,18 @@ STR;
 
             // Do any site install setup, with new Config object
             if (is_file($configFile) && is_file($sitePath.'/_prepend.php')) {
+
+                // Bootstrap the system
                 include $sitePath.'/_prepend.php';
                 $config = \Tk\Config::instance();
 
-                $mask = 0777;
                 // Create Data path and clear any existing Cache path
                 if (!is_dir($config->getDataPath())) {
-                    $io->write(self::green('Creating data directory: ' . $config->getDataPath()));
-                    mkdir($config->getDataPath(), $mask, true);
+                    $io->write($this->green('Creating data directory: ' . $config->getDataPath()));
+                    mkdir($config->getDataPath(), 0777, true);
                 } else {    // Clear existing Caches
                     if (is_dir($config->getCachePath())) {
-                        $io->write(self::green('Clearing cache: ' . $config->getCachePath()));
+                        $io->write($this->green('Clearing cache: ' . $config->getCachePath()));
                         \Tk\FileUtil::rmdir($config->getCachePath());
                     }
                 }
@@ -166,7 +180,7 @@ STR;
                 $tables = $db->getTableList();
                 if ($isInstall) {
                     if (count($tables))
-                        $drop = $io->askConfirmation(self::warning('Replace the existing database. WARNING: Existing data tables will be deleted! [N]: '), false);
+                        $drop = $io->askConfirmation($this->warning('Replace the existing database. WARNING: Existing data tables will be deleted! [N]: '), false);
                     if ($drop) {
                         $exclude = [];
                         if ($config->isDebug()) {
@@ -179,9 +193,9 @@ STR;
                 // Update Database tables
                 $tables = $db->getTableList();
                 if (count($tables)) {
-                    $io->write(self::green('Database Upgrade:'));
+                    $io->write($this->green('Database Upgrade:'));
                 } else {
-                    $io->write(self::green('Database Install:'));
+                    $io->write($this->green('Database Install:'));
                 }
 
                 // Migrate new SQL files
@@ -196,24 +210,24 @@ STR;
                 }
                 // we should refactor the migration process
                 $migrate->migrateList($migrateList, function (string $str, SqlMigrate $m) use ($io) {
-                    $io->write(self::green($str));
+                    $io->write($this->green($str));
                 });
 
 
-                $io->write(self::green('Database Migration Complete'));
+                $io->write($this->green('Database Migration Complete'));
                 if ($isInstall) {
                     $io->write('Open the site in a browser to complete the site setup: ' . \Tk\Uri::create('/')->toString());
                 }
             }
         } catch (\Exception $e) {
-            $io->write(self::red($e->__toString()));
+            $io->write($this->red($e->__toString()));
         }
     }
 
     /**
      * @throws \Exception
      */
-    static function userDbInput(IOInterface $io): array
+    protected function userDbInput(IOInterface $io): array
     {
         $config = [];
         // Prompt for the database access
@@ -228,40 +242,40 @@ STR;
         }
         $io->write('</>');
         $config['db.default.type'] = $dbTypes[$i];
-        $config['db.default.host'] = $io->ask(self::bold('Set the DB hostname [localhost]: '), 'localhost');
-        $config['db.default.name'] = $io->askAndValidate(self::bold('Set the DB name: '), function ($data) { if (!$data) throw new \Exception('Please enter the DB name to use.');  return $data; });
-        $config['db.default.user'] = $io->askAndValidate(self::bold('Set the DB user: '), function ($data) { if (!$data) throw new \Exception('Please enter the DB username.'); return $data; });
-        $config['db.default.pass'] = $io->askAndValidate(self::bold('Set the DB password: '), function ($data) { if (!$data) throw new \Exception('Please enter the DB password.'); return $data; });
+        $config['db.default.host'] = $io->ask($this->bold('Set the DB hostname [localhost]: '), 'localhost');
+        $config['db.default.name'] = $io->askAndValidate($this->bold('Set the DB name: '), function ($data) { if (!$data) throw new \Exception('Please enter the DB name to use.');  return $data; });
+        $config['db.default.user'] = $io->askAndValidate($this->bold('Set the DB user: '), function ($data) { if (!$data) throw new \Exception('Please enter the DB username.'); return $data; });
+        $config['db.default.pass'] = $io->askAndValidate($this->bold('Set the DB password: '), function ($data) { if (!$data) throw new \Exception('Please enter the DB password.'); return $data; });
 
         return $config;
     }
 
-    static function setConfigValue(string $k, string $v, string $configContents): array|string|null
+    protected function setConfigValue(string $k, string $v, string $configContents): array|string|null
     {
         // filter out non quotable values
         if (!preg_match('/^(true|false|null|new|array|function|\[|\\\\)/', $v)) {
-            $v = self::quote($v);
+            $v = $this->quote($v);
         }
         $reg = '/\$config\[[\'"]('.preg_quote($k, '/').')[\'"]\]\s=\s[\'"]?(.+)[\'"]?;/';
         return preg_replace($reg, '\$config[\'$1\'] = ' . $v . ';', $configContents);
     }
 
-    static function bold($str) { return '<options=bold>'.$str.'</>'; }
+    protected function bold($str) { return '<options=bold>'.$str.'</>'; }
 
-    static function green($str) { return '<fg=green>'.$str.'</>'; }
+    protected function green($str) { return '<fg=green>'.$str.'</>'; }
 
-    static function warning($str) { return '<fg=yellow;options=bold>'.$str.'</>'; }
+    protected function warning($str) { return '<fg=yellow;options=bold>'.$str.'</>'; }
 
-    static function red($str) { return '<fg=white;bg=red>'.$str.'</>'; }
+    protected function red($str) { return '<fg=white;bg=red>'.$str.'</>'; }
 
-    static function quote($str) { return '\''.$str.'\''; }
+    protected function quote($str) { return '\''.$str.'\''; }
 
 // IO Examples
 //$output->writeln('<fg=green>foo</>');
 //$output->writeln('<fg=black;bg=cyan>foo</>');
 //$output->writeln('<bg=yellow;options=bold>foo</>');
 
-    static function vd($obj)
+    protected function vd($obj)
     {
         echo print_r($obj, true) . "\n";
     }
