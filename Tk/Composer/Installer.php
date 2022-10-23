@@ -56,11 +56,6 @@ class Installer
             $composer = $event->getComposer();
             $pkg = $composer->getPackage();
 
-            $pkgPaths = ['/vendor/ttek', '/plugin', '/http/theme'];
-            // TODO: search these paths for packages and load files => [config.php, routes.php, ...]
-            //       Or maybe we need to load an object that can init a lib as needed (simple type of bundle???)
-            //         eg: \Tk\Framework. \Dom\Domtemplate
-
 
             // Get the PHP user that will be executing the scripts
             if (function_exists('posix_getpwuid')) {
