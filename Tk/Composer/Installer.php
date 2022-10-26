@@ -195,7 +195,7 @@ STR;
 
                 // Migrate new SQL files
                 $migrate = new SqlMigrate($db);
-                $migrate->setTempPath($config->getTempPath());
+                //$migrate->setTempPath($config->getTempPath());
 
 
                 // TODO: find a better solution than passing paths from the config.
