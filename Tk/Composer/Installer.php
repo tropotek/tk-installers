@@ -4,6 +4,7 @@ namespace Tk\Composer;
 use Composer\IO\IOInterface;
 use Composer\Script\Event;
 use Tk\Db\Pdo;
+use Tk\Db\Util\SqlBackup;
 use Tk\Db\Util\SqlMigrate;
 use Tk\Traits\SingletonTrait;
 
@@ -195,19 +196,27 @@ STR;
 
                 // Migrate new SQL files
                 $migrate = new SqlMigrate($db);
-                //$migrate->setTempPath($config->getTempPath());
-
-
-                // TODO: find a better solution than passing paths from the config.
                 $migrateList = ['App Sql' => $config->getBasePath() . '/config'];
                 if ($config->get('sql.migrate.list')) {
                     $migrateList = $config->get('sql.migrate.list');
                 }
-                // we should refactor the migration process
-                $migrate->migrateList($migrateList, function (string $str, SqlMigrate $m) use ($io) {
-                    $io->write($this->green($str));
-                });
+                $migrate->migrateList($migrateList);
 
+                $dbBackup = new SqlBackup($db);
+                // Execute static files
+                foreach ($config->get('db.migrate.static') as $file) {
+                    $path = "{$config->getBasePath()}/src/config/sql/{$file}";
+                    if (is_file($path)) {
+                        $io->write('Applying ' . $file);
+                        $dbBackup->restore($path);
+                    }
+                }
+
+                $debugSqlFile = $config->getBasePath() . $config->get('debug.sql');
+                if ($config->isDebug() && is_file($debugSqlFile)) {
+                    $io->write('Apply dev sql updates');
+                    $dbBackup->restore($debugSqlFile);
+                }
 
                 $io->write($this->green('Database Migration Complete'));
                 if ($isInstall) {
