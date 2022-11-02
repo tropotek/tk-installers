@@ -214,6 +214,24 @@ STR;
                     $io->write(self::green($str));
                 });
 
+                $dbBackup = \Tk\Util\SqlBackup::create($db);
+
+                // Run all static scripts views.sql, triggers.sql, procedures.sql, functions.sql
+                $staticFiles = ['views.sql', 'triggers.sql', 'procedures.sql', 'functions.sql'];
+                foreach ($staticFiles as $file) {
+                    $path = "{$config->getSitePath()}/src/config/sql/{$file}";
+                    if (is_file($path)) {
+                        $io->write('Applying ' . $file);
+                        $dbBackup->restore($path);
+                    }
+                }
+
+                $debugSqlFile  = $config->getSitePath() . '/bin/assets/debug.sql';
+                if ($config->isDebug()) {
+                    $io->write('Apply dev sql updates');
+                    $dbBackup->restore($debugSqlFile);
+                }
+
                 $io->write(self::green('Database Migration Complete'));
                 if ($isInstall) {
                     $io->write('Open the site in a browser to complete the site setup: ' . \Tk\Uri::create('/')->toString());
