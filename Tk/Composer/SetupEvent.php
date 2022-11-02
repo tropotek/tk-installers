@@ -227,7 +227,7 @@ STR;
                 }
 
                 $debugSqlFile  = $config->getSitePath() . '/bin/assets/debug.sql';
-                if ($config->isDebug()) {
+                if ($config->isDebug() && is_file($debugSqlFile)) {
                     $io->write('Apply dev sql updates');
                     $dbBackup->restore($debugSqlFile);
                 }
