@@ -212,10 +212,10 @@ STR;
                     }
                 }
 
-                $debugSqlFile = $config->getBasePath() . $config->get('debug.sql');
-                if ($config->isDebug() && is_file($debugSqlFile)) {
-                    $io->write('Apply dev sql updates');
-                    $dbBackup->restore($debugSqlFile);
+                $devFile = $config->getBasePath() . $config->get('debug.script');
+                if ($config->isDebug() && is_file($devFile)) {
+                    $io->write('  - Setup dev environment: ' . $config->get('debug.script'));
+                    include($devFile);
                 }
 
                 $io->write($this->green('Database Migration Complete'));
