@@ -6,6 +6,7 @@ use Composer\Script\Event;
 use Tk\Db\Pdo;
 use Tk\Db\Util\SqlBackup;
 use Tk\Db\Util\SqlMigrate;
+use Tk\Traits\SingletonTrait;
 
 /**
  * Default initProject installer class for the Tk framework
@@ -28,6 +29,7 @@ use Tk\Db\Util\SqlMigrate;
  */
 class Installer
 {
+    use SingletonTrait;
 
     /**
      * Add this events to your top-level composer.json
