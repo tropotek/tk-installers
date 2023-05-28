@@ -25,7 +25,6 @@ use Tk\Traits\SingletonTrait;
  *   ]
  * }
  *
- * @author Tropotek <http://www.tropotek.com/>
  */
 class Installer
 {
