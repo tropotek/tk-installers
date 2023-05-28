@@ -19,6 +19,7 @@ class PluginLibrary extends LibraryInstaller
 
     public function supports($packageType)
     {
-        return ('uom-plugin' === $packageType) || ('ttek-plugin' === $packageType);
+        return preg_match('/([a-z]+\-plugin)$/', $packageType);
+        //return ('uom-plugin' === $packageType) || ('ttek-plugin' === $packageType);
     }
 }

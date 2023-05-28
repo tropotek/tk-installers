@@ -19,6 +19,7 @@ class ThemeLibrary extends LibraryInstaller
 
     public function supports($packageType)
     {
-        return ('uom-theme' === $packageType) || ('ttek-theme' === $packageType);
+        return preg_match('/([a-z]+\-theme)$/', $packageType);
+        //return ('uom-theme' === $packageType) || ('ttek-theme' === $packageType);
     }
 }
