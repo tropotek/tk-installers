@@ -195,11 +195,14 @@ STR;
 
                 // Migrate new SQL files
                 $migrate = new SqlMigrate($db);
-                $migrateList = ['App Sql' => $config->getBasePath() . '/config'];
+                $migrateList = ['App Sql' => $config->getBasePath() . '/src/config'];
                 if ($config->get('sql.migrate.list')) {
                     $migrateList = $config->get('sql.migrate.list');
                 }
-                $migrate->migrateList($migrateList);
+                $processed = $migrate->migrateList($migrateList);
+                foreach ($processed as $file) {
+                    $io->write('Migrated ' . $file);
+                }
 
                 $dbBackup = new SqlBackup($db);
                 // Execute static files
