@@ -3,9 +3,11 @@ namespace Tk\Composer;
 
 use Composer\IO\IOInterface;
 use Composer\Script\Event;
+use Monolog\Logger;
 use Tk\Db\Pdo;
 use Tk\Db\Util\SqlBackup;
 use Tk\Db\Util\SqlMigrate;
+use Tk\Factory;
 use Tk\Traits\SingletonTrait;
 
 /**
@@ -193,8 +195,9 @@ STR;
                     $io->write($this->green('Database Install:'));
                 }
 
+                $logger = Factory::instance()->getLogger();
                 // Migrate new SQL files
-                $migrate = new SqlMigrate($db);
+                $migrate = new SqlMigrate($db, $logger);
                 $migrateList = ['App Sql' => $config->getBasePath() . '/src/config'];
                 if ($config->get('sql.migrate.list')) {
                     $migrateList = $config->get('sql.migrate.list');
