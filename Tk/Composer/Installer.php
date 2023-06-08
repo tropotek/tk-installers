@@ -225,7 +225,7 @@ STR;
 
                 $io->write($this->green('Database Migration Complete'));
                 if ($isInstall) {
-                    $io->write('Note be sure to edit the site config before releasing /{site-path}/src/config/config.php');
+                    $io->write('Note edit the config file before releasing /{site-path}/src/config/config.php');
                     $io->write('Open the site in a browser to complete the site setup: ' . \Tk\Uri::create('/')->toString());
                 }
             }
@@ -245,6 +245,8 @@ STR;
 //        $dbTypes = ['mysql', 'pgsql'];
         $dbTypes = ['mysql'];
 
+        $config['hostname'] = $io->ask($this->bold('Set the site domain name [localhost]: '), 'localhost');
+
         $i = 0;
         if (count($dbTypes) > 1) {
             $io->write('<options=bold>');
@@ -260,6 +262,9 @@ STR;
         return $config;
     }
 
+    /**
+     * TODO: We need to update this so that something like `$config->set('param', 'value');` will work as well
+     */
     protected function setConfigValue(string $k, string $v, string $configContents): array|string|null
     {
         // filter out non quotable values
