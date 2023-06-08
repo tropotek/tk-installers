@@ -9,6 +9,7 @@ use Tk\Db\Util\SqlBackup;
 use Tk\Db\Util\SqlMigrate;
 use Tk\Factory;
 use Tk\Traits\SingletonTrait;
+use Tk\Uri;
 
 /**
  * Default initProject installer class for the Tk framework
@@ -149,6 +150,7 @@ STR;
                     $buf = file_get_contents($htFile);
                     $buf = str_replace('RewriteBase /', 'RewriteBase ' . $path, $buf);
                     file_put_contents($htFile, $buf);
+                    $configVars['base.path'] = $path;
                 }
             }
 
@@ -225,8 +227,9 @@ STR;
 
                 $io->write($this->green('Database Migration Complete'));
                 if ($isInstall) {
+                    Uri::$SITE_HOSTNAME = $configVars['hostname'];
                     $io->write('Note edit the config file before releasing /{site-path}/src/config/config.php');
-                    $io->write('Open the site in a browser to complete the site setup: ' . \Tk\Uri::create('/')->toString());
+                    $io->write('Open the site in a browser to complete the site setup: ' . \Tk\Uri::create($configVars['base.path'])->toString());
                 }
             }
         } catch (\Exception $e) {
