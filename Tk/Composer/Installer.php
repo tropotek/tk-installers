@@ -225,6 +225,7 @@ STR;
 
                 $io->write($this->green('Database Migration Complete'));
                 if ($isInstall) {
+                    $io->write('Note be sure to edit the site config before releasing /{site-path}/src/config/config.php');
                     $io->write('Open the site in a browser to complete the site setup: ' . \Tk\Uri::create('/')->toString());
                 }
             }
