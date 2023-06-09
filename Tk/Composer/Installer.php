@@ -113,7 +113,8 @@ STR;
                 $configContents = file_get_contents($configInFile);
                 $io->write($this->green('Please answer the following questions to setup your new site configuration.'));
                 $configVars = $this->userDbInput($io);
-                $configVars['system.encrypt'] = md5(microtime().'');
+                $configVars['system.encrypt']   = md5(microtime().'');
+                $configVars['db.mirror.secret'] = md5(microtime().time());
 
                 // Set dev/debug mode
                 if ($composer->getPackage()->isDev()) {
