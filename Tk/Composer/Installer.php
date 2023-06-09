@@ -113,6 +113,7 @@ STR;
                 $configContents = file_get_contents($configInFile);
                 $io->write($this->green('Please answer the following questions to setup your new site configuration.'));
                 $configVars = $this->userDbInput($io);
+                $configVars['system.encrypt'] = md5(microtime().'');
 
                 // Set dev/debug mode
                 if ($composer->getPackage()->isDev()) {
@@ -142,7 +143,9 @@ STR;
                     $path = '/';
                     if (preg_match('/(.+)\/public_html\/(.*)/', $sitePath, $regs)) {
                         $user = basename($regs[1]);
-                        $path = '/~' . $user . '/' . $regs[2] . '/';
+                        // use when using userdir module in apache
+                        //$path = '/~' . $user . '/' . $regs[2] . '/';
+                        $path = '/' . $regs[2] . '/';
                     }
                     $path = trim($io->ask($this->bold('What is the base URL path [' . $path . ']: '), $path));
                     if (!$path) $path = '/';
@@ -228,8 +231,10 @@ STR;
                 $io->write($this->green('Database Migration Complete'));
                 if ($isInstall) {
                     Uri::$SITE_HOSTNAME = $configVars['hostname'];
-                    $io->write('Note edit the config file before releasing /{site-path}/src/config/config.php');
-                    $io->write('Open the site in a browser to complete the site setup: ' . \Tk\Uri::create($configVars['base.path'])->toString());
+                    $io->write('Check the config file before releasing: /{site-path}/src/config/config.php');
+                    $io->write('Url to this site should be: ' . \Tk\Uri::create($configVars['base.path'])->toString());
+                    $io->write('Default administrator has been created, login with U: admin P: password.');
+                    $io->writeError('WARNING: Edit the password in the user profile page before release.');
                 }
             }
         } catch (\Exception $e) {
@@ -257,7 +262,8 @@ STR;
         }
         $io->write('</>');
         $config['db.default.type'] = $dbTypes[$i];
-        $config['db.default.host'] = $io->ask($this->bold('Set the DB hostname [localhost]: '), 'localhost');
+        $config['db.default.host'] = $io->ask($this->bold('Set the DB hostname ['.$config['hostname'].']: '), $config['hostname']);
+        $config['db.default.port'] = $io->ask($this->bold('Set the DB port [3306]: '), '3306');
         $config['db.default.name'] = $io->askAndValidate($this->bold('Set the DB name: '), function ($data) { if (!$data) throw new \Exception('Please enter the DB name to use.');  return $data; });
         $config['db.default.user'] = $io->askAndValidate($this->bold('Set the DB user: '), function ($data) { if (!$data) throw new \Exception('Please enter the DB username.'); return $data; });
         $config['db.default.pass'] = $io->askAndValidate($this->bold('Set the DB password: '), function ($data) { if (!$data) throw new \Exception('Please enter the DB password.'); return $data; });
