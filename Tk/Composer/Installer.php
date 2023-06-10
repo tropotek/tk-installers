@@ -234,8 +234,11 @@ STR;
                     Uri::$SITE_HOSTNAME = $configVars['hostname'];
                     $io->write('Check the config file before releasing: /{site-path}/src/config/config.php');
                     $io->write('Url to this site should be: ' . \Tk\Uri::create($configVars['base.path'])->toString());
-                    $io->write('Default administrator has been created, login with U: admin P: password.');
-                    $io->writeError('WARNING: Edit the password in the user profile page before release.');
+
+                    // TODO: ask user for admin password and confirmation then set the admin password if an admin user exists.
+                    $io->write('Default administrator account has been created without login credentials.');
+                    $io->writeError('Run the following command to set the admin password: "./bin/cmd password admin {password}"');
+
                 }
             }
         } catch (\Exception $e) {
