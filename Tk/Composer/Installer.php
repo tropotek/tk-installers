@@ -217,7 +217,7 @@ STR;
 
                 $devFile = $config->getBasePath() . $config->get('debug.script');
                 if ($config->isDebug() && is_file($devFile)) {
-                    $io->write('  - Setup dev environment: ' . $config->get('debug.script'));
+                    $io->write('Setup dev environment: ' . $config->get('debug.script'));
                     include($devFile);
                 }
 
