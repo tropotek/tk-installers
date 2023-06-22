@@ -33,19 +33,11 @@ class Installer
 {
     use SingletonTrait;
 
-    /**
-     * Add this events to your top-level composer.json
-     * @param Event $event
-     */
     static function postInstall(Event $event): void
     {
         self::instance()->init($event, true);
     }
 
-    /**
-     * Add this events to your top-level composer.json
-     * @param Event $event
-     */
     static function postUpdate(Event $event): void
     {
         self::instance()->init($event, false);
