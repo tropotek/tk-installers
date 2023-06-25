@@ -221,9 +221,9 @@ STR;
 
                 $io->write($this->green('Database Migration Complete'));
                 if ($isInstall) {
-                    Uri::$SITE_HOSTNAME = $configVars['hostname'];
+                    Uri::$SITE_HOSTNAME = $configVars['hostname'] ?? $config->getHostname();
                     $io->write('Check the config file before releasing: /{site-path}/src/config/config.php');
-                    $io->write('Url to this site should be: ' . \Tk\Uri::create($configVars['base.path'])->toString());
+                    $io->write('Url to this site should be: ' . \Tk\Uri::create($configVars['base.path'] ?? $config->getBasePath())->toString());
 
                     // TODO: ask user for admin password and confirmation then set the admin password if an admin user exists.
                     $io->write('Default administrator account has been created without login credentials.');
