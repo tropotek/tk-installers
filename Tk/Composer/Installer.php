@@ -177,14 +177,12 @@ STR;
                     if (count($tables)) {
                         $drop = $io->askConfirmation($this->warning('Replace the existing database. WARNING: Existing data tables will be deleted! [N]: '), false);
                     }
-                    vd('--', $drop);
                     if ($drop) {
                         $exclude = [];
                         if ($config->isDebug()) {
                             $exclude = [$config->get('session.db_table')];
                         }
                         $db->dropAllTables(true, $exclude);
-                        vd('Tables Dropped');
                     }
                 }
 
@@ -197,9 +195,10 @@ STR;
                 }
 
                 $logger = Factory::instance()->getLogger();
+
                 // Migrate new SQL files
                 $migrate = new SqlMigrate($db, $logger);
-                $migrateList = $config->get('sql.migrate.list', []);
+                $migrateList = $config->get('db.migrate.paths', []);
                 $processed = $migrate->migrateList($migrateList);
                 foreach ($processed as $file) {
                     $io->write('Migrated ' . $file);
