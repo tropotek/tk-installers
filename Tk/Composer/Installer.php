@@ -174,14 +174,17 @@ STR;
                 $drop = false;
                 $tables = $db->getTableList();
                 if ($isInstall) {
-                    if (count($tables))
+                    if (count($tables)) {
                         $drop = $io->askConfirmation($this->warning('Replace the existing database. WARNING: Existing data tables will be deleted! [N]: '), false);
+                    }
+                    vd('--', $drop);
                     if ($drop) {
                         $exclude = [];
                         if ($config->isDebug()) {
                             $exclude = [$config->get('session.db_table')];
                         }
                         $db->dropAllTables(true, $exclude);
+                        vd('Tables Dropped');
                     }
                 }
 
