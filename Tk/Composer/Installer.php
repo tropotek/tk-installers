@@ -196,10 +196,7 @@ STR;
                 $logger = Factory::instance()->getLogger();
                 // Migrate new SQL files
                 $migrate = new SqlMigrate($db, $logger);
-                $migrateList = ['App Sql' => $config->getBasePath() . '/src/config'];
-                if ($config->get('sql.migrate.list')) {
-                    $migrateList = $config->get('sql.migrate.list');
-                }
+                $migrateList = $config->get('sql.migrate.list', []);
                 $processed = $migrate->migrateList($migrateList);
                 foreach ($processed as $file) {
                     $io->write('Migrated ' . $file);
