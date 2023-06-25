@@ -50,7 +50,7 @@ class Installer
             $io = $event->getIO();
             $composer = $event->getComposer();
             $pkg = $composer->getPackage();
-
+            $configVars = [];
 
             // Get the PHP user that will be executing the scripts
             if (function_exists('posix_getpwuid')) {
