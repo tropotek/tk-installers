@@ -197,7 +197,6 @@ STR;
                 // Migrate new SQL files
                 $migrate = new SqlMigrate($db, $logger);
                 $migrateList = $config->get('sql.migrate.list', []);
-                vd($migrateList);
                 $processed = $migrate->migrateList($migrateList);
                 foreach ($processed as $file) {
                     $io->write('Migrated ' . $file);
