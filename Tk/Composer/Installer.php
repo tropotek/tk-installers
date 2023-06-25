@@ -226,10 +226,11 @@ STR;
                     $io->write('Check the config file before releasing: /{site-path}/src/config/config.php');
                     $io->write('Url to this site should be: ' . \Tk\Uri::create($configVars['base.path'] ?? $config->getBasePath())->toString());
 
-                    // TODO: ask user for admin password and confirmation then set the admin password if an admin user exists.
-                    $io->write('Default administrator account has been created without login credentials.');
-                    $io->writeError('Run the following command to set the admin password: "./bin/cmd password admin {password}"');
 
+                    $io->write('Default administrator account has been created without login credentials.');
+                    $io->writeError('Run the following command to set the admin password: ./bin/cmd pwd admin {password}');
+
+                    // TODO: ask user for admin password and confirmation then set the admin password if an admin user exists.
                 }
             }
         } catch (\Exception $e) {
