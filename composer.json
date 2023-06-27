@@ -1,39 +1,39 @@
 {
-  "name": "ttek/tk-installers",
-  "type": "composer-plugin",
-  "description": "Tropotek composer installer plugin",
-  "keywords": [
-    "installers",
-    "tropotek"
-  ],
-  "time": "2022-10-15",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Michael Mifsud",
-      "homepage": "http://www.tropotek.com/"
-    }
-  ],
-  "autoload": {
-    "psr-4": {
-      "Tk\\": "Tk/"
-    }
-  },
-  "require": {
-    "php": "^8.1",
-    "composer-plugin-api": "^2.0"
-  },
-  "require-dev": {
-    "composer/composer": "^2.0"
-  },
-  "extra": {
-    "plugin-modifies-install-path": true,
-    "class": [
-      "Tk\\Composer\\PluginPlugin",
-      "Tk\\Composer\\ThemePlugin"
+    "name": "ttek/tk-installers",
+    "type": "composer-plugin",
+    "description": "Tropotek composer installer plugin",
+    "keywords":  [
+        "installers",
+        "tropotek"
     ],
-    "branch-alias": {
-      "dev-master": "8.0.x-dev"
+    "time": "2023-06-27",
+    "license": "MIT",
+    "authors":  [
+         {
+            "name": "Michael Mifsud",
+            "homepage": "http://www.tropotek.com/"
+        }
+    ],
+    "autoload":  {
+        "psr-4":  {
+            "Tk\\": "Tk/"
+        }
+    },
+    "require":  {
+        "php": "^8.1",
+        "composer-plugin-api": "^2.0"
+    },
+    "require-dev":  {
+        "composer/composer": "^2.0"
+    },
+    "extra":  {
+        "plugin-modifies-install-path": true,
+        "class":  [
+            "Tk\\Composer\\PluginPlugin",
+            "Tk\\Composer\\ThemePlugin"
+        ],
+        "branch-alias":  {
+            "dev-master": "8.0.x-dev"
+        }
     }
-  }
 }
